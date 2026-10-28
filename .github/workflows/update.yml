@@ -31,6 +31,6 @@ jobs:
         run: |
           git config user.name "github-actions"
           git config user.email "github-actions@users.noreply.github.com"
-          git add games.csv index.html wsoc volleyball
+          git add -A
           git diff --cached --quiet || git commit -m "Update playoff pages"
           git push
