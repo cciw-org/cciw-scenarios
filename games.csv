@@ -1,37 +1,37 @@
 date,home,away,home_goals,away_goals
 9/23/2026,Carthage,Elmhurst,0,1
-9/26/2026,North Park,Wheaton,3,2
-9/26/2026,North Central,Illinois Wesleyan,1,1
-9/26/2026,Carthage,Millikin,0,2
 9/26/2026,Augustana,Carroll,0,0
+9/26/2026,Carthage,Millikin,0,2
+9/26/2026,North Central,Illinois Wesleyan,1,1
+9/26/2026,North Park,Wheaton,3,2
+9/30/2026,Carroll,Carthage,2,1
 9/30/2026,Illinois Wesleyan,Augustana,3,0
 9/30/2026,Wheaton,Millikin,3,1
-9/30/2026,Carroll,Carthage,2,1
 10/3/2026,Augustana,North Park,1,2
-10/3/2026,Elmhurst,North Central,0,1
 10/3/2026,Carroll,Millikin,5,4
-10/7/2026,North Park,Carthage,2,1
-10/7/2026,Millikin,North Central,0,2
-10/7/2026,Illinois Wesleyan,Elmhurst,4,0
+10/3/2026,Elmhurst,North Central,0,1
 10/7/2026,Augustana,Wheaton,2,2
-10/10/2026,North Park,Illinois Wesleyan,0,0
-10/10/2026,North Central,Carroll,4,0
-10/10/2026,Wheaton,Carthage,1,0
+10/7/2026,Illinois Wesleyan,Elmhurst,4,0
+10/7/2026,Millikin,North Central,0,2
+10/7/2026,North Park,Carthage,2,1
 10/10/2026,Millikin,Elmhurst,1,0
-10/14/2026,North Central,North Park,2,2
-10/14/2026,Illinois Wesleyan,Millikin,2,3
+10/10/2026,North Central,Carroll,4,0
+10/10/2026,North Park,Illinois Wesleyan,0,0
+10/10/2026,Wheaton,Carthage,1,0
 10/14/2026,Carroll,Wheaton,2,3
 10/14/2026,Elmhurst,Augustana,1,3
-10/17/2026,Carthage,North Central,2,3
+10/14/2026,Illinois Wesleyan,Millikin,2,3
+10/14/2026,North Central,North Park,2,2
 10/17/2026,Carroll,Illinois Wesleyan,0,2
-10/17/2026,Wheaton,Elmhurst,1,1
+10/17/2026,Carthage,North Central,2,3
 10/17/2026,Millikin,Augustana,0,3
+10/17/2026,Wheaton,Elmhurst,1,1
+10/21/2026,Carthage,Illinois Wesleyan,0,1
 10/21/2026,Elmhurst,North Park,0,3
 10/21/2026,Wheaton,North Central,2,4
-10/21/2026,Carthage,Illinois Wesleyan,0,1
-10/24/2026,Millikin,North Park,2,5
-10/24/2026,Illinois Wesleyan,Wheaton,6,2
-10/24/2026,Elmhurst,Carroll,2,3
 10/24/2026,Augustana,Carthage,2,2
-10/28/2026,Carroll,North Park,,
+10/24/2026,Elmhurst,Carroll,2,3
+10/24/2026,Illinois Wesleyan,Wheaton,6,2
+10/24/2026,Millikin,North Park,2,5
 10/28/2026,North Central,Augustana,,
+10/28/2026,North Park,Carroll,,
