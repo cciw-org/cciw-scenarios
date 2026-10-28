@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CCIW Women&#x27;s Soccer Playoff Scenarios</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#f3f5f8; --card:#ffffff; --ink:#172033; --muted:#5b6475; --line:#dce2eb; --head:#e8eef6;
+  --accent:#1d4f91; --in:#1d4f91; --alive:#8a5a00; --out:#a3302c; --sub:#38445a;
+}
+* { box-sizing:border-box; }
+body { margin:0; background:var(--bg); color:var(--ink); font:15px/1.5 Barlow, -apple-system, "Segoe UI", Arial, sans-serif; }
+.page { max-width:1120px; margin:0 auto; padding:28px 16px 40px; }
+.top { display:flex; align-items:center; gap:18px; margin-bottom:14px; }
+.top h1 { margin:0; }
+.logo { height:96px; width:auto; flex:none; }
+@media (max-width:600px) { .logo { height:64px; } }
+.eyebrow { font:700 13px/1 "Barlow Condensed", sans-serif; letter-spacing:.12em; text-transform:uppercase; color:var(--accent); margin:0 0 10px; }
+h1 { font:800 clamp(40px,7vw,58px)/1 "Barlow Condensed", sans-serif; margin:0 0 14px; letter-spacing:-.01em; }
+.intro { color:var(--muted); max-width:580px; margin:0 0 26px; }
+.status { display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:14px; margin-bottom:36px; }
+.card, .panel { background:var(--card); border:1px solid var(--line); border-radius:6px; }
+.card { padding:16px 16px 18px; }
+.card h3 { font:700 18px/1 "Barlow Condensed", sans-serif; text-transform:uppercase; letter-spacing:.02em; margin:4px 0 14px; color:var(--sub); }
+.chip { display:inline-block; font-weight:600; font-size:13px; padding:3px 10px; margin:0 6px 6px 0; border-radius:999px; border:1px solid; }
+.chip.in { color:var(--in); border-color:var(--in); }
+.chip.alive { color:var(--alive); border-color:#b98a2c; }
+.chip.out { color:var(--out); border-color:var(--out); }
+.none { color:var(--muted); font-size:14px; margin:0; }
+h2 { font:700 26px/1.1 "Barlow Condensed", sans-serif; margin:34px 0 14px; }
+.panel { padding:18px 16px; }
+.lead { font-weight:600; margin:0 0 8px; }
+.small { font-size:14px; color:var(--muted); margin:0 0 10px; }
+.small b { color:var(--sub); }
+.colnote { font-size:12px; color:var(--muted); margin:0 0 6px; }
+.tw { overflow-x:auto; border:1px solid var(--line); border-radius:6px; margin:4px 0 14px; }
+table { width:100%; border-collapse:collapse; }
+th { background:var(--head); font:700 13px/1.2 "Barlow Condensed", sans-serif; letter-spacing:.06em; text-transform:uppercase;
+      color:var(--sub); text-align:left; padding:10px 10px; white-space:nowrap; }
+td { border-top:1px solid var(--line); padding:9px 10px; vertical-align:top; }
+.r { text-align:right; }
+td.rowh { font-weight:600; white-space:nowrap; }
+.grid td.r div { white-space:nowrap; }
+.pl { display:inline-block; min-width:18px; color:var(--muted); font-weight:600; margin-right:4px; }
+.games { display:grid; gap:10px; margin-bottom:16px; }
+.game { display:flex; flex-wrap:wrap; align-items:center; gap:8px 12px; padding:10px 12px; border:1px solid var(--line); border-radius:6px; }
+.game .name { font-weight:600; min-width:220px; flex:1; }
+.game .when { font-weight:400; color:var(--muted); font-size:13px; }
+.seg { display:inline-flex; border:1px solid var(--line); border-radius:6px; overflow:hidden; }
+.seg button { font:600 13px Barlow, sans-serif; border:0; background:#fff; color:var(--ink); padding:7px 11px; cursor:pointer; border-left:1px solid var(--line); }
+.seg button:first-child { border-left:0; }
+.seg button.on { background:var(--accent); color:#fff; }
+.score { display:inline-flex; align-items:center; gap:4px; font-size:13px; color:var(--muted); }
+.score input, .score select { padding:5px; font:inherit; color:var(--ink); border:1px solid var(--line); border-radius:4px; background:#fff; }
+.score input { width:44px; text-align:center; }
+.stand td.num, .stand th.num { text-align:center; }
+.stand tr.cut td { border-bottom:2px solid var(--accent); }
+.tag { font-size:12px; font-weight:600; color:var(--accent); white-space:nowrap; }
+.tag.outt { color:var(--out); }
+.tag.tie { color:var(--alive); }
+.reset { font:600 13px Barlow, sans-serif; background:none; border:1px solid var(--line); border-radius:6px; padding:6px 12px; cursor:pointer; color:var(--ink); }
+table.teams td { vertical-align:top; }
+.gl { font-weight:400; font-size:12px; color:var(--muted); white-space:normal; max-width:220px; }
+.ol { display:block; font:700 12px/1.2 "Barlow Condensed", sans-serif; letter-spacing:.06em; text-transform:uppercase; color:var(--muted); margin-bottom:2px; }
+.st { font-size:14px; }
+.st.in { color:var(--in); font-weight:700; }
+.st.out { color:var(--out); font-weight:700; }
+.st.help { color:var(--ink); }
+.foot { font-size:13px; color:var(--muted); margin-top:26px; }
+@media (max-width:600px) { .game .name { min-width:100%; } }
+</style></head><body><div class="page">
+<div class="top"><img class="logo" src="https://dbukjj6eu5tsf.cloudfront.net/sidearm.sites/cciw.org/images/responsive_2021/main-color.svg" alt="CCIW logo"><div>
+<p class="eyebrow">CCIW Women&#x27;s Soccer</p>
+<h1>Playoff Scenarios</h1></div></div>
+<p class="intro">Standings through the games of Saturday, Oct. 24, 2026. Four conference games remain, Oct. 28. The top six of 9 teams qualify for the CCIW Tournament.</p>
+
+<div class="status">
+  <div class="card"><h3>Clinched</h3><span class='chip in'>North Central</span><span class='chip in'>Elmhurst</span><span class='chip in'>Wheaton</span><span class='chip in'>Illinois Wesleyan</span></div>
+  <div class="card"><h3>Still alive</h3><span class='chip alive'>Carroll</span><span class='chip alive'>Millikin</span><span class='chip alive'>North Park</span><span class='chip alive'>Carthage</span></div>
+  <div class="card"><h3>Eliminated</h3><span class='chip out'>Augustana</span></div>
+</div>
+
+
+<h2>Seeds No. 2 to No. 4</h2>
+<div class="panel">
+  <p class="lead">Elmhurst, Wheaton and Illinois Wesleyan will finish somewhere from No. 2 to No. 4.</p>
+  <p class="small">Two games decide it: Elmhurst at Carthage (Wed., Oct. 28) and Millikin at Illinois Wesleyan (Wed., Oct. 28).</p>
+  <p class="small"><b>Final points.</b> Elmhurst: 15 with a loss, 16 with a tie, 18 with a win. Wheaton: 14 (season complete). Illinois Wesleyan: 13 with a loss, 14 with a tie, 16 with a win.</p>
+  <p class="small"><b>Final order</b>, by result of each game.</p>
+  <p class='colnote'>Columns: Millikin at Illinois Wesleyan</p><div class='tw'><table class='grid'><tr><th>Elmhurst at Carthage</th><th class='r'>Illinois Wesleyan wins</th><th class='r'>Tie</th><th class='r'>Millikin wins</th></tr><tr><td class='rowh'>Carthage wins</td><td class='r'><div><span class='pl'>2</span>Illinois Wesleyan</div><div><span class='pl'>3</span>Elmhurst</div><div><span class='pl'>4</span>Wheaton</div></td><td class='r'><div><span class='pl'>2</span>Elmhurst</div><div><span class='pl'>3</span>Wheaton</div><div><span class='pl'>4</span>Illinois Wesleyan</div></td><td class='r'><div><span class='pl'>2</span>Elmhurst</div><div><span class='pl'>3</span>Wheaton</div><div><span class='pl'>4</span>Illinois Wesleyan</div></td></tr><tr><td class='rowh'>Tie</td><td class='r'><div><span class='pl'>2</span>Illinois Wesleyan</div><div><span class='pl'>3</span>Elmhurst</div><div><span class='pl'>4</span>Wheaton</div></td><td class='r'><div><span class='pl'>2</span>Elmhurst</div><div><span class='pl'>3</span>Wheaton</div><div><span class='pl'>4</span>Illinois Wesleyan</div></td><td class='r'><div><span class='pl'>2</span>Elmhurst</div><div><span class='pl'>3</span>Wheaton</div><div><span class='pl'>4</span>Illinois Wesleyan</div></td></tr><tr><td class='rowh'>Elmhurst wins</td><td class='r'><div><span class='pl'>2</span>Elmhurst</div><div><span class='pl'>3</span>Illinois Wesleyan</div><div><span class='pl'>4</span>Wheaton</div></td><td class='r'><div><span class='pl'>2</span>Elmhurst</div><div><span class='pl'>3</span>Wheaton</div><div><span class='pl'>4</span>Illinois Wesleyan</div></td><td class='r'><div><span class='pl'>2</span>Elmhurst</div><div><span class='pl'>3</span>Wheaton</div><div><span class='pl'>4</span>Illinois Wesleyan</div></td></tr></table></div><p class='small'>Counting each combination of these results equally, No. 2 goes to Elmhurst in 7, Illinois Wesleyan in 2.</p>
+</div>
+<h2>The last two spots</h2>
+<div class="panel">
+  <p class="lead">Carroll, Millikin, North Park and Carthage are competing for 2 playoff spots. Two of them will miss the CCIW Tournament.</p>
+  <p class="small">Too many games affect this race for one table, so here is what each team needs. Counts treat every combination of results as equally likely. &ldquo;In&rdquo; and &ldquo;Out&rdquo; are guaranteed whatever else happens.</p>
+  <p class="small"><b>Final points.</b> Carroll: 8 with a loss, 9 with a tie, 11 with a win. Millikin: 7 with a loss, 8 with a tie, 10 with a win. North Park: 5 with a loss, 6 with a tie, 8 with a win. Carthage: 4 with a loss, 5 with a tie, 7 with a win.</p>
+  
+  <p class='small'><b>What each team needs</b>, by its own results.</p><div class='tw'><table class='teams'><tr><th>Team</th><th>Own results</th><th></th><th></th></tr><tr><td class='rowh'>Carroll<div class='gl'>North Park at Carroll (Wed., Oct. 28)</div></td><td><span class='ol'>Win</span><span class='st in'>In</span></td><td><span class='ol'>Tie</span><span class='st in'>In</span></td><td><span class='ol'>Loss</span><span class='st help'>In if Illinois Wesleyan beats Millikin</span></td></tr><tr><td class='rowh'>Millikin<div class='gl'>Millikin at Illinois Wesleyan (Wed., Oct. 28)</div></td><td><span class='ol'>Win</span><span class='st in'>In</span></td><td><span class='ol'>Tie</span><span class='st in'>In</span></td><td><span class='ol'>Loss</span><span class='st help'>Needs help: in for 16 of 27 possible result combinations; tiebreak on exact scores in 2 more</span></td></tr><tr><td class='rowh'>North Park<div class='gl'>North Park at Carroll (Wed., Oct. 28)</div></td><td><span class='ol'>Win</span><span class='st in'>In</span></td><td><span class='ol'>Tie</span><span class='st out'>Out</span></td><td><span class='ol'>Loss</span><span class='st out'>Out</span></td></tr><tr><td class='rowh'>Carthage<div class='gl'>Elmhurst at Carthage (Wed., Oct. 28)</div></td><td><span class='ol'>Win</span><span class='st help'>Out unless a tiebreak on exact scores goes its way (possible in 2 of 27 result combinations)</span></td><td><span class='ol'>Tie</span><span class='st out'>Out</span></td><td><span class='ol'>Loss</span><span class='st out'>Out</span></td></tr></table></div>
+</div><p class='small' style='margin-top:12px'>With 4 games left, each scenario is checked with a sample of possible scores, so a rare score-based tiebreak could still differ.</p>
+
+<h2>Scenario builder</h2>
+<div class="panel">
+  <p class="small">Pick a result for any remaining game and adjust the score if you like. The standings update with every tiebreaker applied.</p>
+  <div class="games" id="games"></div>
+  <div class="tw"><table class="stand" id="stand"></table></div>
+  <button class="reset" id="reset">Reset</button>
+</div>
+
+<p class="foot">Standings: 3 points for a win, 1 for a tie. Tiebreakers: 1) head-to-head among the tied teams; 2) goal differential in all conference matches, capped at 3 per match; 3) fewest goals allowed in conference matches; 4) random draw. With three or more teams tied, once a team separates, the remaining teams start again at step 1. Updated automatically from cciw.org results.</p>
+</div>
+
+<script>
+const CFG = {"teams": ["Augustana", "Carroll", "Carthage", "Elmhurst", "Illinois Wesleyan", "Millikin", "North Central", "North Park", "Wheaton"], "played": [["Elmhurst", "Augustana", 2, 0], ["North Central", "Illinois Wesleyan", 2, 2], ["North Park", "Wheaton", 0, 2], ["Augustana", "Carroll", 2, 3], ["Carthage", "Millikin", 2, 2], ["Millikin", "Wheaton", 3, 3], ["Elmhurst", "North Central", 1, 2], ["Illinois Wesleyan", "Carthage", 2, 1], ["Carroll", "Millikin", 0, 0], ["Augustana", "North Park", 0, 0], ["North Central", "Millikin", 2, 1], ["Elmhurst", "Illinois Wesleyan", 1, 2], ["Wheaton", "Augustana", 2, 0], ["Carthage", "North Park", 0, 3], ["North Central", "Carroll", 3, 2], ["Millikin", "Elmhurst", 0, 3], ["North Park", "Illinois Wesleyan", 0, 2], ["Wheaton", "Carthage", 0, 0], ["North Park", "North Central", 1, 4], ["Wheaton", "Carroll", 1, 0], ["Carthage", "North Central", 2, 4], ["Wheaton", "Elmhurst", 0, 1], ["Carroll", "Illinois Wesleyan", 1, 0], ["Millikin", "Augustana", 4, 0], ["North Central", "Wheaton", 3, 1], ["North Park", "Elmhurst", 1, 3], ["Illinois Wesleyan", "Augustana", 3, 0], ["Carroll", "Carthage", 2, 2], ["Illinois Wesleyan", "Wheaton", 0, 1], ["Elmhurst", "Carroll", 1, 0], ["Millikin", "North Park", 2, 2], ["Augustana", "Carthage", 2, 2]], "remaining": [["Augustana", "North Central"], ["Carthage", "Elmhurst"], ["Illinois Wesleyan", "Millikin"], ["Carroll", "North Park"]], "q": 6, "cap": 3, "scope": "all"};
+
+const RES = [["A", a => a + " win"], ["D", () => "Tie"], ["H", h => h + " win"]];
+const DEF = {H:[1,0], D:[1,1], A:[0,1]};
+const SCORE_CHOICES = null;          // free number boxes
+const UNRESOLVED = "Random draw";
+function stats(games, only) {
+  const s = {};
+  const g = t => s[t] || (s[t] = {pts:0, cgd:0, ga:0, w:0, l:0, d:0});
+  for (const [h, a, hg, ag] of games) {
+    if (only && !(only.has(h) && only.has(a))) continue;
+    const H = g(h), A = g(a);
+    const diff = Math.max(-CFG.cap, Math.min(CFG.cap, hg - ag));
+    H.cgd += diff; A.cgd -= diff; H.ga += ag; A.ga += hg;
+    if (hg > ag) { H.pts += 3; H.w++; A.l++; }
+    else if (hg < ag) { A.pts += 3; A.w++; H.l++; }
+    else { H.pts += 1; A.pts += 1; H.d++; A.d++; }
+  }
+  return s;
+}
+const val = (s, t, k) => (s[t] ? s[t][k] : 0);
+function breakTie(group, games) {
+  if (group.length === 1) return [group[0]];
+  const tied = new Set(group);
+  const h2h = stats(games, tied), gd = stats(games, CFG.scope === "tied" ? tied : null), full = stats(games);
+  const keys = [t => val(h2h, t, "pts"), t => val(gd, t, "cgd"), t => -val(full, t, "ga")];
+  for (const key of keys) {
+    const v = Object.fromEntries(group.map(t => [t, key(t)]));
+    const distinct = [...new Set(Object.values(v))].sort((x, y) => y - x);
+    if (distinct.length > 1) {
+      let out = [];
+      for (const x of distinct) out = out.concat(breakTie(group.filter(t => v[t] === x), games));
+      return out;
+    }
+  }
+  return [group.slice().sort()];
+}
+function rank(games, teams) {
+  const s = stats(games);
+  const pts = [...new Set(teams.map(t => val(s, t, "pts")))].sort((x, y) => y - x);
+  let slots = [];
+  for (const p of pts) slots = slots.concat(breakTie(teams.filter(t => val(s, t, "pts") === p).sort(), games));
+  return slots;
+}
+const COLS = ["W-L-T", "Pts", "Capped GD", "GA"];
+function cells(games, t) {
+  const s = stats(games);
+  const gd = val(s, t, "cgd");
+  return [`${val(s,t,"w")}-${val(s,t,"l")}-${val(s,t,"d")}`, `<b>${val(s,t,"pts")}</b>`, (gd > 0 ? "+" : "") + gd, val(s,t,"ga")];
+}
+
+let picks = {};
+function drawGames() {
+  const box = document.getElementById("games");
+  box.innerHTML = "";
+  CFG.remaining.forEach(([h, a], i) => {
+    const p = picks[i];
+    const div = document.createElement("div");
+    div.className = "game";
+    const opts = [["", () => "Not played"]].concat(RES);
+    let score = "";
+    if (p && SCORE_CHOICES) {
+      const win = p.r === "H" ? h : a;
+      const cur = p.r === "H" ? [p.hg, p.ag] : [p.ag, p.hg];
+      score = `<span class="score">${win} wins <select data-i="${i}">` +
+        SCORE_CHOICES.map(c => `<option value="${c}" ${c[0] === cur[0] && c[1] === cur[1] ? "selected" : ""}>${c[0]}-${c[1]}</option>`).join("") +
+        `</select></span>`;
+    } else if (p) {
+      score = `<span class="score">${a} <input data-i="${i}" data-side="a" type="number" min="0" value="${p.ag}"> –
+               <input data-i="${i}" data-side="h" type="number" min="0" value="${p.hg}"> ${h}</span>`;
+    }
+    div.innerHTML = `<span class="name">${a} at ${h}</span>
+      <span class="seg">${opts.map(([k, l]) => `<button data-i="${i}" data-k="${k}" class="${(p ? p.r : "") === k ? "on" : ""}">${l(k === "H" ? h : a)}</button>`).join("")}</span>${score}`;
+    box.appendChild(div);
+  });
+  box.querySelectorAll("button").forEach(b => b.onclick = () => {
+    const i = +b.dataset.i, k = b.dataset.k;
+    if (!k) delete picks[i]; else picks[i] = {r:k, hg:DEF[k][0], ag:DEF[k][1]};
+    drawGames(); drawTable();
+  });
+  box.querySelectorAll("select").forEach(sel => sel.onchange = () => {
+    const p = picks[+sel.dataset.i], [w, l] = sel.value.split(",").map(Number);
+    if (p.r === "H") { p.hg = w; p.ag = l; } else { p.ag = w; p.hg = l; }
+    drawTable();
+  });
+  box.querySelectorAll("input").forEach(inp => inp.oninput = () => {
+    const p = picks[+inp.dataset.i];
+    const v = Math.max(0, parseInt(inp.value || "0", 10));
+    if (inp.dataset.side === "h") p.hg = v; else p.ag = v;
+    p.r = p.hg > p.ag ? "H" : p.hg < p.ag ? "A" : "D";
+    drawTable();
+    inp.closest(".game").querySelectorAll("button").forEach(b => b.classList.toggle("on", b.dataset.k === p.r));
+  });
+}
+function drawTable() {
+  const sim = CFG.remaining.map(([h, a], i) => picks[i] ? [h, a, picks[i].hg, picks[i].ag] : null).filter(Boolean);
+  const games = CFG.played.concat(sim);
+  let place = 1, rows = "";
+  for (const slot of rank(games, CFG.teams)) {
+    const group = Array.isArray(slot) ? slot : [slot];
+    const label = group.length > 1 ? `${place}–${place + group.length - 1}` : `${place}`;
+    group.forEach(t => {
+      const last = place + group.length - 1;
+      const st = place > CFG.q ? "<span class='tag outt'>Out</span>"
+               : group.length > 1 ? `<span class='tag tie'>${UNRESOLVED}</span>`
+               : "<span class='tag'>In</span>";
+      const cut = last === CFG.q && t === group[group.length - 1];
+      rows += `<tr class="${cut ? "cut" : ""}"><td class="num">${label}</td><td><b>${t}</b></td>` +
+        cells(games, t).map(c => `<td class="num">${c}</td>`).join("") + `<td>${st}</td></tr>`;
+    });
+    place += group.length;
+  }
+  document.getElementById("stand").innerHTML =
+    `<tr><th class="num">Seed</th><th>Team</th>` + COLS.map(c => `<th class="num">${c}</th>`).join("") + `<th></th></tr>` + rows;
+}
+document.getElementById("reset").onclick = () => { picks = {}; drawGames(); drawTable(); };
+if (!CFG.remaining.length) document.getElementById("games").innerHTML = "<p class='small'>All games have been played.</p>";
+else drawGames();
+drawTable();
+</script>
+</body></html>
