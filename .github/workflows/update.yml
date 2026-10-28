@@ -34,3 +34,4 @@ jobs:
           git add -A
           git diff --cached --quiet || git commit -m "Update playoff pages"
           git push
+
