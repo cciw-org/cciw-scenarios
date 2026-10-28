@@ -31,6 +31,14 @@ SPORTS = {
         "qualifiers": 6,
         "tournament": "CCIW Tournament",
     },
+    "football": {
+        "name": "CCIW Football",
+        "standings": 1220,
+        "kind": "football",          # regular-season title + automatic bid (AQ), no tournament
+        "folder": "football",        # page address: .../cciw-scenarios/football/
+        "qualifiers": 1,
+        "tournament": "NCAA automatic bid",
+    },
 }
 
 LOGO_URL = "https://dbukjj6eu5tsf.cloudfront.net/sidearm.sites/cciw.org/images/responsive_2021/main-color.svg"

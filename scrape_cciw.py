@@ -88,17 +88,22 @@ def scrape(key):
     if len(teams) < 4:
         raise RuntimeError("Couldn't find the teams on the standings page")
     games = {}   # each pair of teams meets once in the conference regular season
+    marked_pairs = set()
     for team, sid in teams.items():
         print(f"  Reading {team}...")
         html = fetch(f"{BASE}/schedule.aspx?schedule={sid}")
         table = pd.read_html(StringIO(html), match="Opponent")[0]
         opp_col, res_col, date_col = find_col(table, "Opponent"), find_col(table, "Result"), find_col(table, "Date")
         is_conf = table.apply(lambda row: any(str(v).strip() == "*" for v in row), axis=1)
-        for _, row in table[is_conf].iterrows():
+        # conference games first; then unmarked games against conference teams, in case the site
+        # forgot the * (they only count if that pair has no marked game)
+        rows = [(r, True) for _, r in table[is_conf].iterrows()] + [(r, False) for _, r in table[~is_conf].iterrows()]
+        for row, marked in rows:
             opp_text = str(row[opp_col])
             opp = match_team(opp_text, teams)
             if opp is None or opp == team:
-                print(f"    Couldn't match opponent '{opp_text}' - skipped")
+                if marked:
+                    print(f"    Couldn't match opponent '{opp_text}' - skipped")
                 continue
             away = opp_text.strip().lower().startswith("at ")
             home, visitor = (opp, team) if away else (team, opp)
@@ -110,6 +115,12 @@ def scrape(key):
                 hs = vs = ""                                     # not played yet (or not posted)
             k = frozenset((home, visitor))
             old = games.get(k)
+            if not marked and k in marked_pairs:
+                continue
+            if marked:
+                marked_pairs.add(k)
+            elif old is None:
+                print(f"    Counting {visitor} at {home} as a conference game (not marked * on {team}'s page)")
             if old is None or (old["hs"] == "" and hs != ""):
                 games[k] = {"date": str(row[date_col]).strip(), "home": home, "away": visitor, "hs": hs, "vs": vs}
         time.sleep(1.5)   # be gentle with the website

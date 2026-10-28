@@ -410,6 +410,7 @@ def build(key):
         alive=chips(alive, "alive", "All playoff spots are decided."),
         eliminated=chips(eliminated, "out", "No team is eliminated yet."),
         sections=sections, footer=esc(E.FOOTER), engine=E.JS, data=json.dumps(data), gword=g1, gwords=gN,
+        c1="Clinched", c2="Still alive", c3="Eliminated", heading="Playoff Scenarios",
     )
     out = os.path.join(folder, "index.html")
     with open(out, "w") as f:
@@ -491,13 +492,13 @@ table.teams td {{ vertical-align:top; }}
 </style></head><body><div class="page">
 <div class="top">{logo}<div>
 <p class="eyebrow">{sport}</p>
-<h1>Playoff Scenarios</h1></div></div>
+<h1>{heading}</h1></div></div>
 <p class="intro">{intro}</p>
 
 <div class="status">
-  <div class="card"><h3>Clinched</h3>{clinched}</div>
-  <div class="card"><h3>Still alive</h3>{alive}</div>
-  <div class="card"><h3>Eliminated</h3>{eliminated}</div>
+  <div class="card"><h3>{c1}</h3>{clinched}</div>
+  <div class="card"><h3>{c2}</h3>{alive}</div>
+  <div class="card"><h3>{c3}</h3>{eliminated}</div>
 </div>
 
 {sections}
@@ -568,7 +569,7 @@ function drawTable() {{
     const label = group.length > 1 ? `${{place}}–${{place + group.length - 1}}` : `${{place}}`;
     group.forEach(t => {{
       const last = place + group.length - 1;
-      const st = place > CFG.q ? "<span class='tag outt'>Out</span>"
+      const st = (typeof STATUS === "function") ? STATUS(t, games, group) : place > CFG.q ? "<span class='tag outt'>Out</span>"
                : group.length > 1 ? `<span class='tag tie'>${{UNRESOLVED}}</span>`
                : "<span class='tag'>In</span>";
       const cut = last === CFG.q && t === group[group.length - 1];
@@ -578,7 +579,7 @@ function drawTable() {{
     place += group.length;
   }}
   document.getElementById("stand").innerHTML =
-    `<tr><th class="num">Seed</th><th>Team</th>` + COLS.map(c => `<th class="num">${{c}}</th>`).join("") + `<th></th></tr>` + rows;
+    `<tr><th class="num">${{typeof POS_LABEL === "string" ? POS_LABEL : "Seed"}}</th><th>Team</th>` + COLS.map(c => `<th class="num">${{c}}</th>`).join("") + `<th></th></tr>` + rows;
 }}
 document.getElementById("reset").onclick = () => {{ picks = {{}}; drawGames(); drawTable(); }};
 if (!CFG.remaining.length) document.getElementById("games").innerHTML = "<p class='small'>All {gwords} have been played.</p>";
@@ -589,5 +590,9 @@ drawTable();
 """
 
 if __name__ == "__main__":
+    from title_page import build_title
     for key in (sys.argv[1:] or SPORTS):
-        build(key)
+        if SPORTS[key]["kind"] == "football":
+            build_title(key)
+        else:
+            build(key)

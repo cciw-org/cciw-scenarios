@@ -1,37 +1,37 @@
 date,home,away,home_goals,away_goals
 9/23/2026,Elmhurst,Augustana,2,0
-9/26/2026,Augustana,Carroll,2,3
-9/26/2026,Carthage,Millikin,2,2
 9/26/2026,North Central,Illinois Wesleyan,2,2
 9/26/2026,North Park,Wheaton,0,2
+9/26/2026,Augustana,Carroll,2,3
+9/26/2026,Carthage,Millikin,2,2
 9/30/2026,Millikin,Wheaton,3,3
-10/3/2026,Augustana,North Park,0,0
-10/3/2026,Carroll,Millikin,0,0
 10/3/2026,Elmhurst,North Central,1,2
 10/3/2026,Illinois Wesleyan,Carthage,2,1
-10/7/2026,Carthage,North Park,0,3
-10/7/2026,Elmhurst,Illinois Wesleyan,1,2
+10/3/2026,Carroll,Millikin,0,0
+10/3/2026,Augustana,North Park,0,0
 10/7/2026,North Central,Millikin,2,1
+10/7/2026,Elmhurst,Illinois Wesleyan,1,2
 10/7/2026,Wheaton,Augustana,2,0
-10/10/2026,Millikin,Elmhurst,0,3
+10/7/2026,Carthage,North Park,0,3
 10/10/2026,North Central,Carroll,3,2
+10/10/2026,Millikin,Elmhurst,0,3
 10/10/2026,North Park,Illinois Wesleyan,0,2
 10/10/2026,Wheaton,Carthage,0,0
 10/14/2026,North Park,North Central,1,4
 10/14/2026,Wheaton,Carroll,1,0
-10/17/2026,Carroll,Illinois Wesleyan,3,2
 10/17/2026,Carthage,North Central,2,4
-10/17/2026,Millikin,Augustana,4,0
 10/17/2026,Wheaton,Elmhurst,0,1
-10/21/2026,Carroll,Carthage,2,2
-10/21/2026,Illinois Wesleyan,Augustana,3,0
+10/17/2026,Carroll,Illinois Wesleyan,1,0
+10/17/2026,Millikin,Augustana,4,0
 10/21/2026,North Central,Wheaton,3,1
 10/21/2026,North Park,Elmhurst,1,3
-10/24/2026,Augustana,Carthage,2,2
-10/24/2026,Elmhurst,Carroll,2,0
+10/21/2026,Illinois Wesleyan,Augustana,3,0
+10/21/2026,Carroll,Carthage,2,2
 10/24/2026,Illinois Wesleyan,Wheaton,0,1
+10/24/2026,Elmhurst,Carroll,1,0
 10/24/2026,Millikin,North Park,2,2
+10/24/2026,Augustana,Carthage,2,2
 10/28/2026,Augustana,North Central,,
-10/28/2026,Carroll,North Park,,
 10/28/2026,Carthage,Elmhurst,,
 10/28/2026,Illinois Wesleyan,Millikin,,
+10/28/2026,Carroll,North Park,,

@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CCIW Football Title Race</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#f3f5f8; --card:#ffffff; --ink:#172033; --muted:#5b6475; --line:#dce2eb; --head:#e8eef6;
+  --accent:#1d4f91; --in:#1d4f91; --alive:#8a5a00; --out:#a3302c; --sub:#38445a;
+}
+* { box-sizing:border-box; }
+body { margin:0; background:var(--bg); color:var(--ink); font:15px/1.5 Barlow, -apple-system, "Segoe UI", Arial, sans-serif; }
+.page { max-width:1120px; margin:0 auto; padding:28px 16px 40px; }
+.top { display:flex; align-items:center; gap:18px; margin-bottom:14px; }
+.top h1 { margin:0; }
+.logo { height:96px; width:auto; flex:none; }
+@media (max-width:600px) { .logo { height:64px; } }
+.eyebrow { font:700 13px/1 "Barlow Condensed", sans-serif; letter-spacing:.12em; text-transform:uppercase; color:var(--accent); margin:0 0 10px; }
+h1 { font:800 clamp(40px,7vw,58px)/1 "Barlow Condensed", sans-serif; margin:0 0 14px; letter-spacing:-.01em; }
+.intro { color:var(--muted); max-width:580px; margin:0 0 26px; }
+.status { display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:14px; margin-bottom:36px; }
+.card, .panel { background:var(--card); border:1px solid var(--line); border-radius:6px; }
+.card { padding:16px 16px 18px; }
+.card h3 { font:700 18px/1 "Barlow Condensed", sans-serif; text-transform:uppercase; letter-spacing:.02em; margin:4px 0 14px; color:var(--sub); }
+.chip { display:inline-block; font-weight:600; font-size:13px; padding:3px 10px; margin:0 6px 6px 0; border-radius:999px; border:1px solid; }
+.chip.in { color:var(--in); border-color:var(--in); }
+.chip.alive { color:var(--alive); border-color:#b98a2c; }
+.chip.out { color:var(--out); border-color:var(--out); }
+.none { color:var(--muted); font-size:14px; margin:0; }
+h2 { font:700 26px/1.1 "Barlow Condensed", sans-serif; margin:34px 0 14px; }
+.panel { padding:18px 16px; }
+.lead { font-weight:600; margin:0 0 8px; }
+.small { font-size:14px; color:var(--muted); margin:0 0 10px; }
+.small b { color:var(--sub); }
+.colnote { font-size:12px; color:var(--muted); margin:0 0 6px; }
+.tw { overflow-x:auto; border:1px solid var(--line); border-radius:6px; margin:4px 0 14px; }
+table { width:100%; border-collapse:collapse; }
+th { background:var(--head); font:700 13px/1.2 "Barlow Condensed", sans-serif; letter-spacing:.06em; text-transform:uppercase;
+      color:var(--sub); text-align:left; padding:10px 10px; white-space:nowrap; }
+td { border-top:1px solid var(--line); padding:9px 10px; vertical-align:top; }
+.r { text-align:right; }
+td.rowh { font-weight:600; white-space:nowrap; }
+.grid td.r div { white-space:nowrap; }
+.pl { display:inline-block; min-width:18px; color:var(--muted); font-weight:600; margin-right:4px; }
+.games { display:grid; gap:10px; margin-bottom:16px; }
+.game { display:flex; flex-wrap:wrap; align-items:center; gap:8px 12px; padding:10px 12px; border:1px solid var(--line); border-radius:6px; }
+.game .name { font-weight:600; min-width:220px; flex:1; }
+.game .when { font-weight:400; color:var(--muted); font-size:13px; }
+.seg { display:inline-flex; border:1px solid var(--line); border-radius:6px; overflow:hidden; }
+.seg button { font:600 13px Barlow, sans-serif; border:0; background:#fff; color:var(--ink); padding:7px 11px; cursor:pointer; border-left:1px solid var(--line); }
+.seg button:first-child { border-left:0; }
+.seg button.on { background:var(--accent); color:#fff; }
+.score { display:inline-flex; align-items:center; gap:4px; font-size:13px; color:var(--muted); }
+.score input, .score select { padding:5px; font:inherit; color:var(--ink); border:1px solid var(--line); border-radius:4px; background:#fff; }
+.score input { width:44px; text-align:center; }
+.stand td.num, .stand th.num { text-align:center; }
+.stand tr.cut td { border-bottom:2px solid var(--accent); }
+.tag { font-size:12px; font-weight:600; color:var(--accent); white-space:nowrap; }
+.tag.outt { color:var(--out); }
+.tag.tie { color:var(--alive); }
+.reset { font:600 13px Barlow, sans-serif; background:none; border:1px solid var(--line); border-radius:6px; padding:6px 12px; cursor:pointer; color:var(--ink); }
+table.teams td { vertical-align:top; }
+.gl { font-weight:400; font-size:12px; color:var(--muted); white-space:normal; max-width:220px; }
+.ol { display:block; font:700 12px/1.2 "Barlow Condensed", sans-serif; letter-spacing:.06em; text-transform:uppercase; color:var(--muted); margin-bottom:2px; }
+.st { font-size:14px; }
+.st.in { color:var(--in); font-weight:700; }
+.st.out { color:var(--out); font-weight:700; }
+.st.help { color:var(--ink); }
+.foot { font-size:13px; color:var(--muted); margin-top:26px; }
+@media (max-width:600px) { .game .name { min-width:100%; } }
+</style></head><body><div class="page">
+<div class="top"><img class="logo" src="https://dbukjj6eu5tsf.cloudfront.net/sidearm.sites/cciw.org/images/responsive_2021/main-color.svg" alt="CCIW logo"><div>
+<p class="eyebrow">CCIW Football</p>
+<h1>Title Race</h1></div></div>
+<p class="intro">Standings through the games of Saturday, Oct. 24, 2026. Twelve conference games remain, Oct. 31 to Nov. 14. The team that finishes first is the CCIW champion and earns the conference&#x27;s automatic bid (AQ) to the NCAA playoffs. Teams tied for first are co-champions, and the tiebreakers decide the AQ.</p>
+
+<div class="status">
+  <div class="card"><h3>Clinched</h3><p class='none'>No team has clinched a share yet.</p></div>
+  <div class="card"><h3>Still in the title race</h3><span class='chip alive'>Wheaton</span><span class='chip alive'>North Central</span><span class='chip alive'>Illinois Wesleyan</span><span class='chip alive'>Augustana</span><span class='chip alive'>Carroll</span><span class='chip alive'>Carthage</span></div>
+  <div class="card"><h3>Out of the title race</h3><span class='chip out'>Millikin</span><span class='chip out'>North Park</span><span class='chip out'>Elmhurst</span></div>
+</div>
+
+
+<h2>The title race</h2>
+<div class="panel">
+  <p class="lead">Wheaton, North Central, Illinois Wesleyan, Augustana, Carroll and Carthage can still win at least a share of the title.</p>
+  <p class="small">Too many games affect the title race for one table, so here is what each team needs. Percentages show how often each thing happens across all the ways the other games can go, counting each one equally.</p>
+  <p class="small"><b>Final records.</b> Wheaton: between 5-3 and 8-0. North Central: between 4-4 and 7-1. Illinois Wesleyan: between 4-4 and 6-2. Augustana: between 3-5 and 6-2. Carroll: between 3-5 and 5-3. Carthage: between 2-6 and 5-3.</p>
+  <p class='small'><b>What each team needs</b>, by its own results.</p><div class='tw'><table class='teams'><tr><th>Team</th><th>Own results</th><th></th><th></th><th></th></tr><tr><td class='rowh'>Wheaton<div class='gl'>Wheaton at Augustana (Sat., Oct. 31); Elmhurst at Wheaton (Sat., Nov. 7); Wheaton at Carthage (Sat., Nov. 14)</div></td><td><span class='ol'>Goes 3-0</span><span class='st in'>Outright title + AQ</span></td><td><span class='ol'>Goes 2-1</span><span class='st help'>Title share always · AQ always · outright 88%</span></td><td><span class='ol'>Goes 1-2</span><span class='st help'>Title share 88% · AQ 74% · outright 26%</span></td><td><span class='ol'>Goes 0-3</span><span class='st help'>Title share 23% · AQ 12% · outright never</span></td></tr><tr><td class='rowh'>North Central<div class='gl'>Carthage at North Central (Sat., Oct. 31); North Central at Millikin (Sat., Nov. 7); Illinois Wesleyan at North Central (Sat., Nov. 14)</div></td><td><span class='ol'>Goes 3-0</span><span class='st help'>Title share 88% · AQ 50%</span></td><td><span class='ol'>Goes 2-1</span><span class='st help'>Title share 50% · AQ 16% · outright 8%</span></td><td><span class='ol'>Goes 1-2</span><span class='st help'>Title share 6% · AQ 1% · outright never</span></td><td><span class='ol'>Goes 0-3</span><span class='st out'>No title</span></td></tr><tr><td class='rowh'>Illinois Wesleyan<div class='gl'>North Park at Illinois Wesleyan (Sat., Nov. 7); Illinois Wesleyan at North Central (Sat., Nov. 14)</div></td><td><span class='ol'>Goes 2-0</span><span class='st help'>Title share 50% · AQ 12% · outright 7%</span></td><td><span class='ol'>Goes 1-1</span><span class='st help'>Title share 5% · AQ 1% · outright never</span></td><td><span class='ol'>Goes 0-2</span><span class='st out'>No title</span></td><td></td></tr><tr><td class='rowh'>Augustana<div class='gl'>Wheaton at Augustana (Sat., Oct. 31); Carthage at Augustana (Sat., Nov. 7); Augustana at Carroll (Sat., Nov. 14)</div></td><td><span class='ol'>Goes 3-0</span><span class='st help'>Title share 66% · AQ 23% · outright 8%</span></td><td><span class='ol'>Goes 2-1</span><span class='st help'>Title share 5% · AQ never</span></td><td><span class='ol'>Goes 1-2</span><span class='st out'>No title</span></td><td><span class='ol'>Goes 0-3</span><span class='st out'>No title</span></td></tr><tr><td class='rowh'>Carroll<div class='gl'>Carroll at North Park (Sat., Oct. 31); Augustana at Carroll (Sat., Nov. 14)</div></td><td><span class='ol'>Goes 2-0</span><span class='st help'>Title share 4% · AQ never</span></td><td><span class='ol'>Goes 1-1</span><span class='st out'>No title</span></td><td><span class='ol'>Goes 0-2</span><span class='st out'>No title</span></td><td></td></tr><tr><td class='rowh'>Carthage<div class='gl'>Carthage at North Central (Sat., Oct. 31); Carthage at Augustana (Sat., Nov. 7); Wheaton at Carthage (Sat., Nov. 14)</div></td><td><span class='ol'>Goes 3-0</span><span class='st help'>Title share 12% · AQ 5% · outright never</span></td><td><span class='ol'>Goes 2-1</span><span class='st out'>No title</span></td><td><span class='ol'>Goes 1-2</span><span class='st out'>No title</span></td><td><span class='ol'>Goes 0-3</span><span class='st out'>No title</span></td></tr></table></div>
+</div><p class='small' style='margin-top:12px'>Each scenario is checked with a sample of possible scores, so a rare point-differential tiebreak could still differ.</p>
+
+<h2>Scenario builder</h2>
+<div class="panel">
+  <p class="small">Pick a result for any remaining game and adjust the score if you like. The standings update with every tiebreaker applied.</p>
+  <div class="games" id="games"></div>
+  <div class="tw"><table class="stand" id="stand"></table></div>
+  <button class="reset" id="reset">Reset</button>
+</div>
+
+<p class="foot">The team that finishes first in the conference standings is the champion. Teams tied for first are co-champions, and the automatic bid (AQ) goes to the winner of the tiebreakers: 1) head-to-head among the tied teams; 2) point differential against the tied teams; 3) fewest defensive yards against the tied teams; 4) random draw. Defensive yards aren&#x27;t calculated here because they aren&#x27;t listed on cciw.org&#x27;s schedule pages. Updated automatically from cciw.org results.</p>
+</div>
+
+<script>
+const CFG = {"teams": ["Augustana", "Carroll", "Carthage", "Elmhurst", "Illinois Wesleyan", "Millikin", "North Central", "North Park", "Wheaton"], "played": [["Wheaton", "Millikin", 82, 10], ["North Park", "North Central", 10, 45], ["Augustana", "Illinois Wesleyan", 10, 17], ["Elmhurst", "Carroll", 0, 33], ["Illinois Wesleyan", "Wheaton", 7, 28], ["Elmhurst", "Augustana", 14, 58], ["Carroll", "Carthage", 20, 0], ["Millikin", "North Park", 31, 27], ["Wheaton", "North Park", 33, 6], ["North Central", "Augustana", 35, 7], ["Illinois Wesleyan", "Carthage", 34, 14], ["Millikin", "Carroll", 28, 31], ["North Central", "Wheaton", 10, 13], ["Carroll", "Illinois Wesleyan", 7, 44], ["Augustana", "Millikin", 49, 41], ["Carthage", "Elmhurst", 28, 3], ["Wheaton", "Carroll", 41, 3], ["Elmhurst", "North Central", 2, 74], ["Millikin", "Illinois Wesleyan", 42, 35], ["Carthage", "North Park", 12, 17], ["Carroll", "North Central", 7, 62], ["Illinois Wesleyan", "Elmhurst", 44, 0], ["North Park", "Augustana", 12, 35], ["Carthage", "Millikin", 25, 18]], "remaining": [["Augustana", "Wheaton"], ["North Central", "Carthage"], ["North Park", "Carroll"], ["Elmhurst", "Millikin"], ["Wheaton", "Elmhurst"], ["Millikin", "North Central"], ["Illinois Wesleyan", "North Park"], ["Augustana", "Carthage"], ["Carthage", "Wheaton"], ["North Central", "Illinois Wesleyan"], ["Carroll", "Augustana"], ["North Park", "Elmhurst"]], "q": 1};
+
+const RES = [["A", a => a + " win"], ["H", h => h + " win"]];
+const DEF = {H:[28,21], A:[21,28]};
+const SCORE_CHOICES = null;
+const UNRESOLVED = "Defensive yards / draw";
+const POS_LABEL = "Pos";
+function stats(games, only) {
+  const s = {};
+  const g = t => s[t] || (s[t] = {w:0, l:0, pf:0, pa:0});
+  for (const [h, a, hp, ap] of games) {
+    if (only && !(only.has(h) && only.has(a))) continue;
+    const H = g(h), A = g(a);
+    H.pf += hp; H.pa += ap; A.pf += ap; A.pa += hp;
+    if (hp > ap) { H.w++; A.l++; } else if (ap > hp) { A.w++; H.l++; }
+  }
+  return s;
+}
+const val = (s, t, k) => (s[t] ? s[t][k] : 0);
+const pct = (w, l) => (w + l ? w / (w + l) : null);
+const same = (x, y) => Math.abs(x - y) < 1e-9;
+function groupsBy(group, v) {
+  const distinct = [];
+  for (const t of group) if (!distinct.some(d => same(d, v[t]))) distinct.push(v[t]);
+  distinct.sort((x, y) => y - x);
+  return distinct.map(d => group.filter(t => same(v[t], d)));
+}
+function breakTie(group, games) {
+  if (group.length === 1) return [group[0]];
+  const h2h = stats(games, new Set(group));
+  const tests = [Object.fromEntries(group.map(t => [t, pct(val(h2h,t,"w"), val(h2h,t,"l"))])),
+                 Object.fromEntries(group.map(t => [t, val(h2h,t,"pf") - val(h2h,t,"pa")]))];
+  for (const v of tests) {
+    if (group.some(t => v[t] === null)) continue;
+    const parts = groupsBy(group, v);
+    if (parts.length > 1) { let out = []; for (const p of parts) out = out.concat(breakTie(p, games)); return out; }
+  }
+  return [group.slice().sort()];
+}
+function rank(games, teams) {
+  const s = stats(games);
+  const v = Object.fromEntries(teams.map(t => [t, pct(val(s,t,"w"), val(s,t,"l")) || 0]));
+  let slots = [];
+  for (const p of groupsBy(teams.slice().sort(), v)) slots = slots.concat(breakTie(p, games));
+  return slots;
+}
+function STATUS(t, games) {
+  const s = stats(games);
+  const v = Object.fromEntries(CFG.teams.map(x => [x, pct(val(s,x,"w"), val(s,x,"l")) || 0]));
+  const best = Math.max(...Object.values(v));
+  const champs = CFG.teams.filter(x => same(v[x], best));
+  if (!champs.includes(t)) return "";
+  const aq = breakTie(champs.slice().sort(), games)[0];
+  if (champs.length === 1) return "<span class='tag'>First · AQ</span>";
+  if (Array.isArray(aq)) return aq.includes(t) ? "<span class='tag tie'>Tied for first · AQ on yards/draw</span>" : "<span class='tag'>Tied for first</span>";
+  return aq === t ? "<span class='tag'>Tied for first · AQ</span>" : "<span class='tag'>Tied for first</span>";
+}
+const COLS = ["W-L", "Pct.", "PF", "PA"];
+function cells(games, t) {
+  const s = stats(games);
+  const w = val(s,t,"w"), l = val(s,t,"l");
+  const p = pct(w, l);
+  return [`${w}-${l}`, `<b>${p === null ? "—" : p.toFixed(3).replace(/^0/, "")}</b>`, val(s,t,"pf"), val(s,t,"pa")];
+}
+
+let picks = {};
+function drawGames() {
+  const box = document.getElementById("games");
+  box.innerHTML = "";
+  CFG.remaining.forEach(([h, a], i) => {
+    const p = picks[i];
+    const div = document.createElement("div");
+    div.className = "game";
+    const opts = [["", () => "Not played"]].concat(RES);
+    let score = "";
+    if (p && SCORE_CHOICES) {
+      const win = p.r === "H" ? h : a;
+      const cur = p.r === "H" ? [p.hg, p.ag] : [p.ag, p.hg];
+      score = `<span class="score">${win} wins <select data-i="${i}">` +
+        SCORE_CHOICES.map(c => `<option value="${c}" ${c[0] === cur[0] && c[1] === cur[1] ? "selected" : ""}>${c[0]}-${c[1]}</option>`).join("") +
+        `</select></span>`;
+    } else if (p) {
+      score = `<span class="score">${a} <input data-i="${i}" data-side="a" type="number" min="0" value="${p.ag}"> –
+               <input data-i="${i}" data-side="h" type="number" min="0" value="${p.hg}"> ${h}</span>`;
+    }
+    div.innerHTML = `<span class="name">${a} at ${h}</span>
+      <span class="seg">${opts.map(([k, l]) => `<button data-i="${i}" data-k="${k}" class="${(p ? p.r : "") === k ? "on" : ""}">${l(k === "H" ? h : a)}</button>`).join("")}</span>${score}`;
+    box.appendChild(div);
+  });
+  box.querySelectorAll("button").forEach(b => b.onclick = () => {
+    const i = +b.dataset.i, k = b.dataset.k;
+    if (!k) delete picks[i]; else picks[i] = {r:k, hg:DEF[k][0], ag:DEF[k][1]};
+    drawGames(); drawTable();
+  });
+  box.querySelectorAll("select").forEach(sel => sel.onchange = () => {
+    const p = picks[+sel.dataset.i], [w, l] = sel.value.split(",").map(Number);
+    if (p.r === "H") { p.hg = w; p.ag = l; } else { p.ag = w; p.hg = l; }
+    drawTable();
+  });
+  box.querySelectorAll("input").forEach(inp => inp.oninput = () => {
+    const p = picks[+inp.dataset.i];
+    const v = Math.max(0, parseInt(inp.value || "0", 10));
+    if (inp.dataset.side === "h") p.hg = v; else p.ag = v;
+    p.r = p.hg > p.ag ? "H" : p.hg < p.ag ? "A" : "D";
+    drawTable();
+    inp.closest(".game").querySelectorAll("button").forEach(b => b.classList.toggle("on", b.dataset.k === p.r));
+  });
+}
+function drawTable() {
+  const sim = CFG.remaining.map(([h, a], i) => picks[i] ? [h, a, picks[i].hg, picks[i].ag] : null).filter(Boolean);
+  const games = CFG.played.concat(sim);
+  let place = 1, rows = "";
+  for (const slot of rank(games, CFG.teams)) {
+    const group = Array.isArray(slot) ? slot : [slot];
+    const label = group.length > 1 ? `${place}–${place + group.length - 1}` : `${place}`;
+    group.forEach(t => {
+      const last = place + group.length - 1;
+      const st = (typeof STATUS === "function") ? STATUS(t, games, group) : place > CFG.q ? "<span class='tag outt'>Out</span>"
+               : group.length > 1 ? `<span class='tag tie'>${UNRESOLVED}</span>`
+               : "<span class='tag'>In</span>";
+      const cut = last === CFG.q && t === group[group.length - 1];
+      rows += `<tr class="${cut ? "cut" : ""}"><td class="num">${label}</td><td><b>${t}</b></td>` +
+        cells(games, t).map(c => `<td class="num">${c}</td>`).join("") + `<td>${st}</td></tr>`;
+    });
+    place += group.length;
+  }
+  document.getElementById("stand").innerHTML =
+    `<tr><th class="num">${typeof POS_LABEL === "string" ? POS_LABEL : "Seed"}</th><th>Team</th>` + COLS.map(c => `<th class="num">${c}</th>`).join("") + `<th></th></tr>` + rows;
+}
+document.getElementById("reset").onclick = () => { picks = {}; drawGames(); drawTable(); };
+if (!CFG.remaining.length) document.getElementById("games").innerHTML = "<p class='small'>All games have been played.</p>";
+else drawGames();
+drawTable();
+</script>
+</body></html>
