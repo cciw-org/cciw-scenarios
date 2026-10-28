@@ -67,6 +67,12 @@ table.teams td { vertical-align:top; }
 .st.in { color:var(--in); font-weight:700; }
 .st.out { color:var(--out); font-weight:700; }
 .st.help { color:var(--ink); }
+ol.final { list-style:none; padding:0; margin:0 0 14px; display:grid; grid-template-columns:repeat(auto-fill,minmax(230px,1fr)); gap:6px 16px; }
+ol.final li { font-weight:600; }
+.seed { display:inline-block; min-width:30px; color:var(--accent); font-weight:700; }
+.rec { font-weight:400; color:var(--muted); font-size:14px; }
+ul.why { margin:0; padding-left:18px; color:var(--ink); font-size:14px; }
+ul.why li { margin-bottom:6px; }
 .foot { font-size:13px; color:var(--muted); margin-top:26px; }
 @media (max-width:600px) { .game .name { min-width:100%; } }
 </style></head><body><div class="page">
@@ -139,12 +145,9 @@ function breakTie(group, games) {
   const keys = [t => val(h2h, t, "pts"), t => val(gd, t, "cgd"), t => -val(full, t, "ga")];
   for (const key of keys) {
     const v = Object.fromEntries(group.map(t => [t, key(t)]));
-    const distinct = [...new Set(Object.values(v))].sort((x, y) => y - x);
-    if (distinct.length > 1) {
-      let out = [];
-      for (const x of distinct) out = out.concat(breakTie(group.filter(t => v[t] === x), games));
-      return out;
-    }
+    const top = Math.max(...Object.values(v));
+    const leaders = group.filter(t => v[t] === top);
+    if (leaders.length === 1) return [leaders[0]].concat(breakTie(group.filter(t => t !== leaders[0]), games));
   }
   return [group.slice().sort()];
 }

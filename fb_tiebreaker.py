@@ -60,13 +60,13 @@ def break_tie(group, games):
     h2h = stats(games, only=tied)
     tests = [{t: pct(h2h[t]["w"], h2h[t]["l"]) for t in group},          # 1. head-to-head
              {t: h2h[t]["pf"] - h2h[t]["pa"] for t in group}]            # 2. point differential vs tied teams
-    for values in tests:
-        if any(v is None for v in values.values()) or len(set(values.values())) == 1:
+    for values in tests:          # until ONE team rises above the others; the rest start again
+        if any(v is None for v in values.values()):
             continue
-        order = []
-        for v in sorted(set(values.values()), reverse=True):
-            order += break_tie([t for t in group if values[t] == v], games)
-        return order
+        top = max(values.values())
+        leaders = [t for t in group if values[t] == top]
+        if len(leaders) == 1:
+            return [leaders[0]] + break_tie([t for t in group if t != leaders[0]], games)
     return [tuple(sorted(group))]                                         # 3-4. defensive yards / draw
 
 
@@ -136,8 +136,9 @@ function breakTie(group, games) {
                  Object.fromEntries(group.map(t => [t, val(h2h,t,"pf") - val(h2h,t,"pa")]))];
   for (const v of tests) {
     if (group.some(t => v[t] === null)) continue;
-    const parts = groupsBy(group, v);
-    if (parts.length > 1) { let out = []; for (const p of parts) out = out.concat(breakTie(p, games)); return out; }
+    const top = Math.max(...group.map(t => v[t]));
+    const leaders = group.filter(t => same(v[t], top));
+    if (leaders.length === 1) return [leaders[0]].concat(breakTie(group.filter(t => t !== leaders[0]), games));
   }
   return [group.slice().sort()];
 }

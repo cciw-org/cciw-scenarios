@@ -2,7 +2,8 @@
 The sports this project builds pages for.
 
 To add next season's data, change "standings" to the number at the end of the new
-standings page address (cciw.org/standings.aspx?standings=NNNN). Everything else
+standings page address (cciw.org/standings.aspx?standings=NNNN). A "path=..." value
+(like women's tennis) always points at the current season, so it never needs changing. Everything else
 (teams, schedule pages) is read from that page automatically.
 """
 
@@ -38,6 +39,14 @@ SPORTS = {
         "folder": "football",        # page address: .../cciw-scenarios/football/
         "qualifiers": 1,
         "tournament": "NCAA automatic bid",
+    },
+    "wten": {
+        "name": "CCIW Women's Tennis",
+        "standings": "path=wten",    # this kind of link always shows the current season
+        "kind": "tennis",
+        "folder": "wten",            # page address: .../cciw-scenarios/wten/
+        "qualifiers": 6,
+        "tournament": "CCIW Championships",
     },
 }
 

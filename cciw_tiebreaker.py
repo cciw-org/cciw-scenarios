@@ -94,17 +94,17 @@ def criteria(group, games):
 
 
 def break_tie(group, games):
-    """Order teams tied on points. Returns a list of slots: a team name,
+    """Order teams tied on points. Criteria are applied until ONE team rises above the others;
+    that team is placed and the rest start again at step 1. Returns a list of slots: a team name,
     or a tuple of teams that only a random draw can separate."""
     if len(group) == 1:
         return [group[0]]
     for key in criteria(group, games):
         vals = {t: key(t) for t in group}
-        if len(set(vals.values())) > 1:
-            order = []
-            for v in sorted(set(vals.values()), reverse=True):
-                order += break_tie([t for t in group if vals[t] == v], games)  # restart at step 1
-            return order
+        top = max(vals.values())
+        leaders = [t for t in group if vals[t] == top]
+        if len(leaders) == 1:
+            return [leaders[0]] + break_tie([t for t in group if t != leaders[0]], games)
     return [tuple(sorted(group))]               # 4. random action
 
 
@@ -174,12 +174,9 @@ function breakTie(group, games) {
   const keys = [t => val(h2h, t, "pts"), t => val(gd, t, "cgd"), t => -val(full, t, "ga")];
   for (const key of keys) {
     const v = Object.fromEntries(group.map(t => [t, key(t)]));
-    const distinct = [...new Set(Object.values(v))].sort((x, y) => y - x);
-    if (distinct.length > 1) {
-      let out = [];
-      for (const x of distinct) out = out.concat(breakTie(group.filter(t => v[t] === x), games));
-      return out;
-    }
+    const top = Math.max(...Object.values(v));
+    const leaders = group.filter(t => v[t] === top);
+    if (leaders.length === 1) return [leaders[0]].concat(breakTie(group.filter(t => t !== leaders[0]), games));
   }
   return [group.slice().sort()];
 }

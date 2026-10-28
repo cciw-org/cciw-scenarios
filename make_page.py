@@ -15,11 +15,12 @@ from datetime import datetime
 from itertools import product, combinations
 
 import cciw_tiebreaker
+import tennis_tiebreaker
 import vb_tiebreaker
 from sports import SPORTS, LOGO_URL
 
-ENGINES = {"soccer": cciw_tiebreaker, "volleyball": vb_tiebreaker}
-SCENARIOS_UP_TO = {"soccer": 10, "volleyball": 13}   # more left than this: skip scenarios
+ENGINES = {"soccer": cciw_tiebreaker, "volleyball": vb_tiebreaker, "tennis": tennis_tiebreaker}
+SCENARIOS_UP_TO = {"soccer": 10, "volleyball": 13, "tennis": 13}   # more left than this: skip scenarios
 NUM = ["No", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten",
        "Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen"]
 esc = html.escape
@@ -383,6 +384,18 @@ def build(key):
         sections += (f"<p class='small' style='margin-top:12px'>With {n} {gN} left, each scenario is checked with a "
                      f"sample of possible scores, so a rare score-based tiebreak could still differ.</p>")
 
+    if n == 0:   # season over: final seeds and how any ties were broken
+        final = E.places(E.rank(played, teams))
+        seeds = sorted((b, w, t) for t, (b, w) in final.items() if b <= Q)
+        items = "".join(f"<li><span class='seed'>{b if b == w else f'{b}–{w}'}</span>{esc(t)} "
+                        f"<span class='rec'>({E.record_text(t, played)})</span></li>" for b, w, t in seeds)
+        expl = E.explain(played, teams) if hasattr(E, "explain") else []
+        ties = ("<p class='small'><b>How the ties were broken</b></p><ul class='why'>" +
+                "".join(f"<li>{esc(x)}</li>" for x in expl) + "</ul>") if expl else ""
+        sections = (f"<h2>Final seeds</h2><div class='panel'><p class='lead'>The regular season is complete. "
+                    f"These {word(len(seeds), False)} teams qualify for the {esc(cfg['tournament'])}.</p>"
+                    f"<ol class='final'>{items}</ol>{ties}</div>")
+
     # ---------- intro ----------
     thru = ""
     if played_dates:
@@ -487,6 +500,12 @@ table.teams td {{ vertical-align:top; }}
 .st.in {{ color:var(--in); font-weight:700; }}
 .st.out {{ color:var(--out); font-weight:700; }}
 .st.help {{ color:var(--ink); }}
+ol.final {{ list-style:none; padding:0; margin:0 0 14px; display:grid; grid-template-columns:repeat(auto-fill,minmax(230px,1fr)); gap:6px 16px; }}
+ol.final li {{ font-weight:600; }}
+.seed {{ display:inline-block; min-width:30px; color:var(--accent); font-weight:700; }}
+.rec {{ font-weight:400; color:var(--muted); font-size:14px; }}
+ul.why {{ margin:0; padding-left:18px; color:var(--ink); font-size:14px; }}
+ul.why li {{ margin-bottom:6px; }}
 .foot {{ font-size:13px; color:var(--muted); margin-top:26px; }}
 @media (max-width:600px) {{ .game .name {{ min-width:100%; }} }}
 </style></head><body><div class="page">

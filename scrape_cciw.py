@@ -51,7 +51,8 @@ def find_col(table, word):
 
 
 def read_standings(sid):
-    html = fetch(f"{BASE}/standings.aspx?standings={sid}")
+    query = sid if str(sid).startswith("path=") else f"standings={sid}"
+    html = fetch(f"{BASE}/standings.aspx?{query}")
     doc = lxml_html.fromstring(html)
     teams = {}
     for a in doc.xpath('//a[contains(@href, "schedule.aspx?schedule=")]'):
@@ -157,7 +158,7 @@ def scrape(key):
         w_.writerow(["date", "home", "away", "home_goals", "away_goals"])
         for g in sorted(games.values(), key=lambda g: (pd.to_datetime(g["date"], errors="coerce"), g["home"])):
             w_.writerow([g["date"], g["home"], g["away"], g["hs"], g["vs"]])
-    print(f"  {len(games)} conference {'matches' if cfg['kind'] == 'volleyball' else 'games'} saved to {path}")
+    print(f"  {len(games)} conference {'games' if cfg['kind'] in ('soccer', 'football') else 'matches'} saved to {path}")
     if problems:
         print("  WARNING - some results aren't posted on the schedule pages yet:")
         for p in problems:

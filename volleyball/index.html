@@ -67,6 +67,12 @@ table.teams td { vertical-align:top; }
 .st.in { color:var(--in); font-weight:700; }
 .st.out { color:var(--out); font-weight:700; }
 .st.help { color:var(--ink); }
+ol.final { list-style:none; padding:0; margin:0 0 14px; display:grid; grid-template-columns:repeat(auto-fill,minmax(230px,1fr)); gap:6px 16px; }
+ol.final li { font-weight:600; }
+.seed { display:inline-block; min-width:30px; color:var(--accent); font-weight:700; }
+.rec { font-weight:400; color:var(--muted); font-size:14px; }
+ul.why { margin:0; padding-left:18px; color:var(--ink); font-size:14px; }
+ul.why li { margin-bottom:6px; }
 .foot { font-size:13px; color:var(--muted); margin-top:26px; }
 @media (max-width:600px) { .game .name { min-width:100%; } }
 </style></head><body><div class="page">
@@ -76,19 +82,19 @@ table.teams td { vertical-align:top; }
 <p class="intro">Standings through the matches of Friday, Oct. 23, 2026. Eleven conference matches remain, Oct. 28 to Nov. 6. The top six of 9 teams qualify for the CCIW Tournament.</p>
 
 <div class="status">
-  <div class="card"><h3>Clinched</h3><span class='chip in'>Illinois Wesleyan</span><span class='chip in'>Carroll</span></div>
-  <div class="card"><h3>Still alive</h3><span class='chip alive'>Carthage</span><span class='chip alive'>North Central</span><span class='chip alive'>Elmhurst</span><span class='chip alive'>Wheaton</span><span class='chip alive'>Millikin</span><span class='chip alive'>Augustana</span><span class='chip alive'>North Park</span></div>
+  <div class="card"><h3>Clinched</h3><span class='chip in'>Illinois Wesleyan</span></div>
+  <div class="card"><h3>Still alive</h3><span class='chip alive'>Carthage</span><span class='chip alive'>Carroll</span><span class='chip alive'>North Central</span><span class='chip alive'>Elmhurst</span><span class='chip alive'>Wheaton</span><span class='chip alive'>Millikin</span><span class='chip alive'>Augustana</span><span class='chip alive'>North Park</span></div>
   <div class="card"><h3>Eliminated</h3><p class='none'>No team is eliminated yet.</p></div>
 </div>
 
 
-<h2>The last four spots</h2>
+<h2>The last five spots</h2>
 <div class="panel">
-  <p class="lead">Carthage, North Central, Elmhurst, Wheaton, Millikin, Augustana and North Park are competing for 4 playoff spots. Three of them will miss the CCIW Tournament.</p>
+  <p class="lead">Carthage, Carroll, North Central, Elmhurst, Wheaton, Millikin, Augustana and North Park are competing for 5 playoff spots. Three of them will miss the CCIW Tournament.</p>
   <p class="small">Too many matches affect this race for one table, so here is what each team needs. Counts treat every combination of results as equally likely. &ldquo;In&rdquo; and &ldquo;Out&rdquo; are guaranteed whatever else happens.</p>
-  <p class="small"><b>Final records.</b> Carthage: between 4-4 and 7-1. North Central: between 3-5 and 6-2. Elmhurst: between 3-5 and 6-2. Wheaton: between 2-6 and 4-4. Millikin: between 1-7 and 4-4. Augustana: between 1-7 and 3-5. North Park: between 0-8 and 2-6.</p>
+  <p class="small"><b>Final records.</b> Carthage: between 4-4 and 7-1. Carroll: between 4-4 and 7-1. North Central: between 3-5 and 6-2. Elmhurst: between 3-5 and 6-2. Wheaton: between 2-6 and 4-4. Millikin: between 1-7 and 4-4. Augustana: between 1-7 and 3-5. North Park: between 0-8 and 2-6.</p>
   
-  <p class='small'><b>What each team needs</b>, by its own results.</p><div class='tw'><table class='teams'><tr><th>Team</th><th>Own results</th><th></th><th></th><th></th></tr><tr><td class='rowh'>Carthage<div class='gl'>Millikin at Carthage (Wed., Oct. 28); Carroll at Carthage (Sat., Oct. 31); Elmhurst at Carthage (Wed., Nov. 4)</div></td><td><span class='ol'>Goes 3-0</span><span class='st in'>In</span></td><td><span class='ol'>Goes 2-1</span><span class='st in'>In</span></td><td><span class='ol'>Goes 1-2</span><span class='st in'>In</span></td><td><span class='ol'>Goes 0-3</span><span class='st help'>Needs help: in for 251 of 256 possible result combinations; tiebreak on exact scores in 5 more</span></td></tr><tr><td class='rowh'>North Central<div class='gl'>Illinois Wesleyan at North Central (Wed., Oct. 28); North Central at Augustana (Wed., Nov. 4); North Central at Elmhurst (Fri., Nov. 6)</div></td><td><span class='ol'>Goes 3-0</span><span class='st in'>In</span></td><td><span class='ol'>Goes 2-1</span><span class='st in'>In</span></td><td><span class='ol'>Goes 1-2</span><span class='st in'>In</span></td><td><span class='ol'>Goes 0-3</span><span class='st help'>Needs help: in for 216 of 256 possible result combinations</span></td></tr><tr><td class='rowh'>Elmhurst<div class='gl'>Carroll at Elmhurst (Wed., Oct. 28); Elmhurst at Carthage (Wed., Nov. 4); North Central at Elmhurst (Fri., Nov. 6)</div></td><td><span class='ol'>Goes 3-0</span><span class='st in'>In</span></td><td><span class='ol'>Goes 2-1</span><span class='st in'>In</span></td><td><span class='ol'>Goes 1-2</span><span class='st help'>Needs help: in for 758 of 768 possible result combinations; tiebreak on exact scores in 10 more</span></td><td><span class='ol'>Goes 0-3</span><span class='st help'>Needs help: in for 180 of 256 possible result combinations; tiebreak on exact scores in 48 more</span></td></tr><tr><td class='rowh'>Wheaton<div class='gl'>Wheaton at North Park (Wed., Oct. 28); Carroll at Wheaton (Tue., Nov. 3)</div></td><td><span class='ol'>Goes 2-0</span><span class='st help'>Needs help: in for 496 of 512 possible result combinations; tiebreak on exact scores in 12 more</span></td><td><span class='ol'>Goes 1-1</span><span class='st help'>Needs help: in for 855 of 1024 possible result combinations; tiebreak on exact scores in 41 more</span></td><td><span class='ol'>Goes 0-2</span><span class='st help'>Needs help: in for 32 of 512 possible result combinations; tiebreak on exact scores in 64 more</span></td><td></td></tr><tr><td class='rowh'>Millikin<div class='gl'>Millikin at Carthage (Wed., Oct. 28); Augustana at Millikin (Fri., Oct. 30); North Park at Millikin (Wed., Nov. 4)</div></td><td><span class='ol'>Goes 3-0</span><span class='st help'>Needs help: in for 212 of 256 possible result combinations; tiebreak on exact scores in 15 more</span></td><td><span class='ol'>Goes 2-1</span><span class='st help'>Needs help: in for 180 of 768 possible result combinations; tiebreak on exact scores in 48 more</span></td><td><span class='ol'>Goes 1-2</span><span class='st out'>Out</span></td><td><span class='ol'>Goes 0-3</span><span class='st out'>Out</span></td></tr><tr><td class='rowh'>Augustana<div class='gl'>Augustana at Millikin (Fri., Oct. 30); North Central at Augustana (Wed., Nov. 4)</div></td><td><span class='ol'>Goes 2-0</span><span class='st help'>Needs help: in for 156 of 512 possible result combinations; tiebreak on exact scores in 12 more</span></td><td><span class='ol'>Goes 1-1</span><span class='st help'>Out unless a tiebreak on exact scores goes its way (possible in 32 of 1024 result combinations)</span></td><td><span class='ol'>Goes 0-2</span><span class='st out'>Out</span></td><td></td></tr><tr><td class='rowh'>North Park<div class='gl'>Wheaton at North Park (Wed., Oct. 28); North Park at Millikin (Wed., Nov. 4)</div></td><td><span class='ol'>Goes 2-0</span><span class='st help'>Needs help: in for 64 of 512 possible result combinations; tiebreak on exact scores in 64 more</span></td><td><span class='ol'>Goes 1-1</span><span class='st out'>Out</span></td><td><span class='ol'>Goes 0-2</span><span class='st out'>Out</span></td><td></td></tr></table></div>
+  <p class='small'><b>What each team needs</b>, by its own results.</p><div class='tw'><table class='teams'><tr><th>Team</th><th>Own results</th><th></th><th></th><th></th></tr><tr><td class='rowh'>Carthage<div class='gl'>Millikin at Carthage (Wed., Oct. 28); Carroll at Carthage (Sat., Oct. 31); Elmhurst at Carthage (Wed., Nov. 4)</div></td><td><span class='ol'>Goes 3-0</span><span class='st in'>In</span></td><td><span class='ol'>Goes 2-1</span><span class='st in'>In</span></td><td><span class='ol'>Goes 1-2</span><span class='st in'>In</span></td><td><span class='ol'>Goes 0-3</span><span class='st help'>Needs help: in for 248 of 256 possible result combinations; tiebreak on exact scores in 8 more</span></td></tr><tr><td class='rowh'>Carroll<div class='gl'>Carroll at Elmhurst (Wed., Oct. 28); Carroll at Carthage (Sat., Oct. 31); Carroll at Wheaton (Tue., Nov. 3)</div></td><td><span class='ol'>Goes 3-0</span><span class='st in'>In</span></td><td><span class='ol'>Goes 2-1</span><span class='st in'>In</span></td><td><span class='ol'>Goes 1-2</span><span class='st in'>In</span></td><td><span class='ol'>Goes 0-3</span><span class='st help'>Needs help: in for 249 of 256 possible result combinations; tiebreak on exact scores in 7 more</span></td></tr><tr><td class='rowh'>North Central<div class='gl'>Illinois Wesleyan at North Central (Wed., Oct. 28); North Central at Augustana (Wed., Nov. 4); North Central at Elmhurst (Fri., Nov. 6)</div></td><td><span class='ol'>Goes 3-0</span><span class='st in'>In</span></td><td><span class='ol'>Goes 2-1</span><span class='st in'>In</span></td><td><span class='ol'>Goes 1-2</span><span class='st help'>Needs help: in for 765 of 768 possible result combinations; tiebreak on exact scores in 3 more</span></td><td><span class='ol'>Goes 0-3</span><span class='st help'>Needs help: in for 152 of 256 possible result combinations; tiebreak on exact scores in 64 more</span></td></tr><tr><td class='rowh'>Elmhurst<div class='gl'>Carroll at Elmhurst (Wed., Oct. 28); Elmhurst at Carthage (Wed., Nov. 4); North Central at Elmhurst (Fri., Nov. 6)</div></td><td><span class='ol'>Goes 3-0</span><span class='st in'>In</span></td><td><span class='ol'>Goes 2-1</span><span class='st in'>In</span></td><td><span class='ol'>Goes 1-2</span><span class='st help'>Needs help: in for 747 of 768 possible result combinations; tiebreak on exact scores in 21 more</span></td><td><span class='ol'>Goes 0-3</span><span class='st help'>Needs help: in for 175 of 256 possible result combinations; tiebreak on exact scores in 53 more</span></td></tr><tr><td class='rowh'>Wheaton<div class='gl'>Wheaton at North Park (Wed., Oct. 28); Carroll at Wheaton (Tue., Nov. 3)</div></td><td><span class='ol'>Goes 2-0</span><span class='st help'>Needs help: in for 481 of 512 possible result combinations; tiebreak on exact scores in 31 more</span></td><td><span class='ol'>Goes 1-1</span><span class='st help'>Needs help: in for 844 of 1024 possible result combinations; tiebreak on exact scores in 52 more</span></td><td><span class='ol'>Goes 0-2</span><span class='st help'>Needs help: in for 32 of 512 possible result combinations; tiebreak on exact scores in 96 more</span></td><td></td></tr><tr><td class='rowh'>Millikin<div class='gl'>Millikin at Carthage (Wed., Oct. 28); Augustana at Millikin (Fri., Oct. 30); North Park at Millikin (Wed., Nov. 4)</div></td><td><span class='ol'>Goes 3-0</span><span class='st help'>Needs help: in for 208 of 256 possible result combinations; tiebreak on exact scores in 35 more</span></td><td><span class='ol'>Goes 2-1</span><span class='st help'>Needs help: in for 180 of 768 possible result combinations; tiebreak on exact scores in 61 more</span></td><td><span class='ol'>Goes 1-2</span><span class='st help'>Out unless a tiebreak on exact scores goes its way (possible in 58 of 768 result combinations)</span></td><td><span class='ol'>Goes 0-3</span><span class='st out'>Out</span></td></tr><tr><td class='rowh'>Augustana<div class='gl'>Augustana at Millikin (Fri., Oct. 30); North Central at Augustana (Wed., Nov. 4)</div></td><td><span class='ol'>Goes 2-0</span><span class='st help'>Needs help: in for 156 of 512 possible result combinations; tiebreak on exact scores in 71 more</span></td><td><span class='ol'>Goes 1-1</span><span class='st help'>Out unless a tiebreak on exact scores goes its way (possible in 54 of 1024 result combinations)</span></td><td><span class='ol'>Goes 0-2</span><span class='st out'>Out</span></td><td></td></tr><tr><td class='rowh'>North Park<div class='gl'>Wheaton at North Park (Wed., Oct. 28); North Park at Millikin (Wed., Nov. 4)</div></td><td><span class='ol'>Goes 2-0</span><span class='st help'>Needs help: in for 32 of 512 possible result combinations; tiebreak on exact scores in 96 more</span></td><td><span class='ol'>Goes 1-1</span><span class='st out'>Out</span></td><td><span class='ol'>Goes 0-2</span><span class='st out'>Out</span></td><td></td></tr></table></div>
 </div><p class='small' style='margin-top:12px'>With 11 matches left, each scenario is checked with a sample of possible scores, so a rare score-based tiebreak could still differ.</p>
 
 <h2>Scenario builder</h2>
@@ -123,13 +129,11 @@ function stats(games, only) {
 const val = (s, t, k) => (s[t] ? s[t][k] : 0);
 const pct = (w, l) => (w + l ? w / (w + l) : null);
 const same = (x, y) => Math.abs(x - y) < 1e-9;
-function split(group, v) {
+function leader(group, v) {
   if (group.some(t => v[t] === null)) return null;
-  const distinct = [];
-  for (const t of group) if (!distinct.some(d => same(d, v[t]))) distinct.push(v[t]);
-  if (distinct.length < 2) return null;
-  distinct.sort((x, y) => y - x);
-  return distinct.map(d => group.filter(t => same(v[t], d)));
+  const top = Math.max(...group.map(t => v[t]));
+  const leaders = group.filter(t => same(v[t], top));
+  return leaders.length === 1 ? leaders[0] : null;
 }
 function breakTie(group, games, above) {
   if (group.length === 1) return [group[0]];
@@ -148,12 +152,8 @@ function breakTie(group, games, above) {
     tests.push(Object.fromEntries(group.map(t => [t, pct(rec[t][0], rec[t][1])])));
   }
   for (const v of tests) {
-    const parts = split(group, v);
-    if (parts) {
-      let order = [];
-      for (const p of parts) order = order.concat(breakTie(p, games, above.concat(order)));
-      return order;
-    }
+    const lead = leader(group, v);
+    if (lead) return [lead].concat(breakTie(group.filter(t => t !== lead), games, above.concat([lead])));
   }
   return [group.slice().sort()];
 }

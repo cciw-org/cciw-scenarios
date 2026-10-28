@@ -61,15 +61,18 @@ def pct(w, l):
     return Fraction(w, w + l) if w + l else None
 
 
-def _split(group, values):
-    """Return groups ordered best-first if values separate them, else None."""
-    if any(values[t] is None for t in group) or len(set(values.values())) == 1:
+def _leader(group, values):
+    """The one team with the best value, or None if no single team rises above the rest."""
+    if any(values[t] is None for t in group):
         return None
-    return [[t for t in group if values[t] == v] for v in sorted(set(values.values()), reverse=True)]
+    top = max(values.values())
+    leaders = [t for t in group if values[t] == top]
+    return leaders[0] if len(leaders) == 1 else None
 
 
 def break_tie(group, games, above):
-    """`above` = slots already placed above this group, best first."""
+    """`above` = slots already placed above this group, best first. Criteria are applied until
+    ONE team rises above the others; it is placed and the rest start again at step 1."""
     if len(group) == 1:
         return [group[0]]
     tied = set(group)
@@ -88,12 +91,9 @@ def break_tie(group, games, above):
                     rec[t][0 if won else 1] += 1
         tests.append({t: pct(*rec[t]) for t in group})
     for values in tests:
-        parts = _split(group, values)
-        if parts:
-            order = []
-            for part in parts:
-                order += break_tie(part, games, above + order)        # restart at step 1
-            return order
+        lead = _leader(group, values)
+        if lead:
+            return [lead] + break_tie([t for t in group if t != lead], games, above + [lead])
     return [tuple(sorted(group))]                                      # 5-6. point differential / coin toss
 
 
@@ -141,13 +141,11 @@ function stats(games, only) {
 const val = (s, t, k) => (s[t] ? s[t][k] : 0);
 const pct = (w, l) => (w + l ? w / (w + l) : null);
 const same = (x, y) => Math.abs(x - y) < 1e-9;
-function split(group, v) {
+function leader(group, v) {
   if (group.some(t => v[t] === null)) return null;
-  const distinct = [];
-  for (const t of group) if (!distinct.some(d => same(d, v[t]))) distinct.push(v[t]);
-  if (distinct.length < 2) return null;
-  distinct.sort((x, y) => y - x);
-  return distinct.map(d => group.filter(t => same(v[t], d)));
+  const top = Math.max(...group.map(t => v[t]));
+  const leaders = group.filter(t => same(v[t], top));
+  return leaders.length === 1 ? leaders[0] : null;
 }
 function breakTie(group, games, above) {
   if (group.length === 1) return [group[0]];
@@ -166,12 +164,8 @@ function breakTie(group, games, above) {
     tests.push(Object.fromEntries(group.map(t => [t, pct(rec[t][0], rec[t][1])])));
   }
   for (const v of tests) {
-    const parts = split(group, v);
-    if (parts) {
-      let order = [];
-      for (const p of parts) order = order.concat(breakTie(p, games, above.concat(order)));
-      return order;
-    }
+    const lead = leader(group, v);
+    if (lead) return [lead].concat(breakTie(group.filter(t => t !== lead), games, above.concat([lead])));
   }
   return [group.slice().sort()];
 }

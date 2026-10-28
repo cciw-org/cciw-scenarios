@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CCIW Women&#x27;s Tennis Playoff Scenarios</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#f3f5f8; --card:#ffffff; --ink:#172033; --muted:#5b6475; --line:#dce2eb; --head:#e8eef6;
+  --accent:#1d4f91; --in:#1d4f91; --alive:#8a5a00; --out:#a3302c; --sub:#38445a;
+}
+* { box-sizing:border-box; }
+body { margin:0; background:var(--bg); color:var(--ink); font:15px/1.5 Barlow, -apple-system, "Segoe UI", Arial, sans-serif; }
+.page { max-width:1120px; margin:0 auto; padding:28px 16px 40px; }
+.top { display:flex; align-items:center; gap:18px; margin-bottom:14px; }
+.top h1 { margin:0; }
+.logo { height:96px; width:auto; flex:none; }
+@media (max-width:600px) { .logo { height:64px; } }
+.eyebrow { font:700 13px/1 "Barlow Condensed", sans-serif; letter-spacing:.12em; text-transform:uppercase; color:var(--accent); margin:0 0 10px; }
+h1 { font:800 clamp(40px,7vw,58px)/1 "Barlow Condensed", sans-serif; margin:0 0 14px; letter-spacing:-.01em; }
+.intro { color:var(--muted); max-width:580px; margin:0 0 26px; }
+.status { display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:14px; margin-bottom:36px; }
+.card, .panel { background:var(--card); border:1px solid var(--line); border-radius:6px; }
+.card { padding:16px 16px 18px; }
+.card h3 { font:700 18px/1 "Barlow Condensed", sans-serif; text-transform:uppercase; letter-spacing:.02em; margin:4px 0 14px; color:var(--sub); }
+.chip { display:inline-block; font-weight:600; font-size:13px; padding:3px 10px; margin:0 6px 6px 0; border-radius:999px; border:1px solid; }
+.chip.in { color:var(--in); border-color:var(--in); }
+.chip.alive { color:var(--alive); border-color:#b98a2c; }
+.chip.out { color:var(--out); border-color:var(--out); }
+.none { color:var(--muted); font-size:14px; margin:0; }
+h2 { font:700 26px/1.1 "Barlow Condensed", sans-serif; margin:34px 0 14px; }
+.panel { padding:18px 16px; }
+.lead { font-weight:600; margin:0 0 8px; }
+.small { font-size:14px; color:var(--muted); margin:0 0 10px; }
+.small b { color:var(--sub); }
+.colnote { font-size:12px; color:var(--muted); margin:0 0 6px; }
+.tw { overflow-x:auto; border:1px solid var(--line); border-radius:6px; margin:4px 0 14px; }
+table { width:100%; border-collapse:collapse; }
+th { background:var(--head); font:700 13px/1.2 "Barlow Condensed", sans-serif; letter-spacing:.06em; text-transform:uppercase;
+      color:var(--sub); text-align:left; padding:10px 10px; white-space:nowrap; }
+td { border-top:1px solid var(--line); padding:9px 10px; vertical-align:top; }
+.r { text-align:right; }
+td.rowh { font-weight:600; white-space:nowrap; }
+.grid td.r div { white-space:nowrap; }
+.pl { display:inline-block; min-width:18px; color:var(--muted); font-weight:600; margin-right:4px; }
+.games { display:grid; gap:10px; margin-bottom:16px; }
+.game { display:flex; flex-wrap:wrap; align-items:center; gap:8px 12px; padding:10px 12px; border:1px solid var(--line); border-radius:6px; }
+.game .name { font-weight:600; min-width:220px; flex:1; }
+.game .when { font-weight:400; color:var(--muted); font-size:13px; }
+.seg { display:inline-flex; border:1px solid var(--line); border-radius:6px; overflow:hidden; }
+.seg button { font:600 13px Barlow, sans-serif; border:0; background:#fff; color:var(--ink); padding:7px 11px; cursor:pointer; border-left:1px solid var(--line); }
+.seg button:first-child { border-left:0; }
+.seg button.on { background:var(--accent); color:#fff; }
+.score { display:inline-flex; align-items:center; gap:4px; font-size:13px; color:var(--muted); }
+.score input, .score select { padding:5px; font:inherit; color:var(--ink); border:1px solid var(--line); border-radius:4px; background:#fff; }
+.score input { width:44px; text-align:center; }
+.stand td.num, .stand th.num { text-align:center; }
+.stand tr.cut td { border-bottom:2px solid var(--accent); }
+.tag { font-size:12px; font-weight:600; color:var(--accent); white-space:nowrap; }
+.tag.outt { color:var(--out); }
+.tag.tie { color:var(--alive); }
+.reset { font:600 13px Barlow, sans-serif; background:none; border:1px solid var(--line); border-radius:6px; padding:6px 12px; cursor:pointer; color:var(--ink); }
+table.teams td { vertical-align:top; }
+.gl { font-weight:400; font-size:12px; color:var(--muted); white-space:normal; max-width:220px; }
+.ol { display:block; font:700 12px/1.2 "Barlow Condensed", sans-serif; letter-spacing:.06em; text-transform:uppercase; color:var(--muted); margin-bottom:2px; }
+.st { font-size:14px; }
+.st.in { color:var(--in); font-weight:700; }
+.st.out { color:var(--out); font-weight:700; }
+.st.help { color:var(--ink); }
+ol.final { list-style:none; padding:0; margin:0 0 14px; display:grid; grid-template-columns:repeat(auto-fill,minmax(230px,1fr)); gap:6px 16px; }
+ol.final li { font-weight:600; }
+.seed { display:inline-block; min-width:30px; color:var(--accent); font-weight:700; }
+.rec { font-weight:400; color:var(--muted); font-size:14px; }
+ul.why { margin:0; padding-left:18px; color:var(--ink); font-size:14px; }
+ul.why li { margin-bottom:6px; }
+.foot { font-size:13px; color:var(--muted); margin-top:26px; }
+@media (max-width:600px) { .game .name { min-width:100%; } }
+</style></head><body><div class="page">
+<div class="top"><img class="logo" src="https://dbukjj6eu5tsf.cloudfront.net/sidearm.sites/cciw.org/images/responsive_2021/main-color.svg" alt="CCIW logo"><div>
+<p class="eyebrow">CCIW Women&#x27;s Tennis</p>
+<h1>Playoff Scenarios</h1></div></div>
+<p class="intro">Standings through the matches of Tuesday, Oct. 20, 2026. The regular season is complete. The top six of 9 teams qualify for the CCIW Championships.</p>
+
+<div class="status">
+  <div class="card"><h3>Clinched</h3><span class='chip in'>Wheaton</span><span class='chip in'>Augustana</span><span class='chip in'>Carthage</span><span class='chip in'>North Park</span><span class='chip in'>Illinois Wesleyan</span><span class='chip in'>Carroll</span></div>
+  <div class="card"><h3>Still alive</h3><p class='none'>All playoff spots are decided.</p></div>
+  <div class="card"><h3>Eliminated</h3><span class='chip out'>North Central</span><span class='chip out'>Millikin</span><span class='chip out'>Elmhurst</span></div>
+</div>
+
+<h2>Final seeds</h2><div class='panel'><p class='lead'>The regular season is complete. These six teams qualify for the CCIW Championships.</p><ol class='final'><li><span class='seed'>1</span>Wheaton <span class='rec'>(8-0)</span></li><li><span class='seed'>2</span>Augustana <span class='rec'>(6-2)</span></li><li><span class='seed'>3</span>Carthage <span class='rec'>(6-2)</span></li><li><span class='seed'>4</span>North Park <span class='rec'>(6-2)</span></li><li><span class='seed'>5</span>Illinois Wesleyan <span class='rec'>(4-4)</span></li><li><span class='seed'>6</span>Carroll <span class='rec'>(3-5)</span></li></ol><p class='small'><b>How the ties were broken</b></p><ul class='why'><li>Augustana, Carthage and North Park were tied at 6-2. Head-to-head didn&#x27;t separate them (Augustana 1-1, Carthage 1-1, North Park 1-1).</li><li>Their records against every other team were the same, so individual matches won against each other decided it (Augustana 8, North Park 7, Carthage 6), and Augustana takes the top spot.</li><li>That left Carthage and North Park, who start again at head-to-head. Head-to-head: Carthage 1-0, North Park 0-1, so Carthage takes the next spot.</li></ul></div>
+
+<h2>Scenario builder</h2>
+<div class="panel">
+  <p class="small">Pick a result for any remaining match and adjust the score if you like. The standings update with every tiebreaker applied.</p>
+  <div class="games" id="games"></div>
+  <div class="tw"><table class="stand" id="stand"></table></div>
+  <button class="reset" id="reset">Reset</button>
+</div>
+
+<p class="foot">Standings: conference match record. Tiebreakers: 1) head-to-head; 2) record against the teams above the tie in the standings, then the next place down, and so on; 3) individual matches won in matches between the tied teams; 4) sets won between the tied teams; 5) games won between the tied teams; 6) coin flip. With three or more teams tied, once one team rises above the others, the remaining teams start again at step 1. Sets and games won aren&#x27;t calculated here because they aren&#x27;t listed on cciw.org&#x27;s schedule pages. Updated automatically from cciw.org results.</p>
+</div>
+
+<script>
+const CFG = {"teams": ["Augustana", "Carroll", "Carthage", "Elmhurst", "Illinois Wesleyan", "Millikin", "North Central", "North Park", "Wheaton"], "played": [["North Park", "Carthage", 3, 4], ["Carroll", "North Central", 5, 2], ["Wheaton", "North Park", 5, 2], ["Illinois Wesleyan", "Augustana", 1, 6], ["Millikin", "North Central", 3, 4], ["Carroll", "Carthage", 1, 5], ["Millikin", "Augustana", 0, 7], ["Illinois Wesleyan", "Millikin", 7, 0], ["Augustana", "Carroll", 4, 3], ["Wheaton", "Millikin", 7, 0], ["Illinois Wesleyan", "North Park", 1, 6], ["Augustana", "Carthage", 5, 2], ["Wheaton", "North Central", 6, 1], ["North Central", "Illinois Wesleyan", 3, 4], ["Carthage", "Wheaton", 3, 4], ["Millikin", "North Park", 1, 6], ["Augustana", "North Park", 3, 4], ["Wheaton", "Illinois Wesleyan", 6, 1], ["Elmhurst", "Illinois Wesleyan", 0, 7], ["North Park", "Carroll", 5, 2], ["Wheaton", "Elmhurst", 7, 0], ["Augustana", "Elmhurst", 7, 0], ["Carthage", "North Central", 4, 3], ["Millikin", "Elmhurst", 6, 1], ["Elmhurst", "Carthage", 0, 7], ["Augustana", "North Central", 4, 3], ["Carroll", "Illinois Wesleyan", 3, 4], ["Augustana", "Wheaton", 1, 6], ["Carthage", "Illinois Wesleyan", 4, 3], ["Carroll", "Millikin", 7, 0], ["Carthage", "Millikin", 7, 0], ["Carroll", "Elmhurst", 7, 0], ["North Central", "North Park", 3, 4], ["Carroll", "Wheaton", 2, 5], ["North Central", "Elmhurst", 7, 0], ["North Park", "Elmhurst", 7, 0]], "remaining": [], "q": 6};
+
+const RES = [["A", a => a + " win"], ["H", h => h + " win"]];
+const DEF = {H:[5,2], A:[2,5]};
+const SCORE_CHOICES = [[4,3],[5,2],[6,1],[7,0]];   // team score, winner first
+const UNRESOLVED = "Sets / games / coin flip";
+function stats(games, only) {
+  const s = {};
+  const g = t => s[t] || (s[t] = {w:0, l:0, mw:0, ml:0});
+  for (const [h, a, hs, as] of games) {
+    if (only && !(only.has(h) && only.has(a))) continue;
+    const H = g(h), A = g(a);
+    H.mw += hs; H.ml += as; A.mw += as; A.ml += hs;
+    if (hs > as) { H.w++; A.l++; } else { A.w++; H.l++; }
+  }
+  return s;
+}
+const val = (s, t, k) => (s[t] ? s[t][k] : 0);
+const pct = (w, l) => (w + l ? w / (w + l) : null);
+const same = (x, y) => Math.abs(x - y) < 1e-9;
+function groupsBy(group, v) {
+  const distinct = [];
+  for (const t of group) if (!distinct.some(d => same(d, v[t]))) distinct.push(v[t]);
+  distinct.sort((x, y) => y - x);
+  return distinct.map(d => group.filter(t => same(v[t], d)));
+}
+function breakTie(group, games, above, below) {
+  if (group.length === 1) return [group[0]];
+  const tied = new Set(group), h2h = stats(games, tied);
+  const tests = [Object.fromEntries(group.map(t => [t, pct(val(h2h,t,"w"), val(h2h,t,"l"))]))];
+  for (const slot of above.concat(below)) {
+    const opp = new Set(Array.isArray(slot) ? slot : [slot]);
+    const rec = Object.fromEntries(group.map(t => [t, [0, 0]]));
+    for (const [h, a, hs, as] of games) {
+      if (tied.has(h) && opp.has(a)) rec[h][hs > as ? 0 : 1]++;
+      if (tied.has(a) && opp.has(h)) rec[a][as > hs ? 0 : 1]++;
+    }
+    tests.push(Object.fromEntries(group.map(t => [t, pct(rec[t][0], rec[t][1])])));
+  }
+  tests.push(Object.fromEntries(group.map(t => [t, val(h2h,t,"mw")])));
+  for (const v of tests) {
+    if (group.some(t => v[t] === null)) continue;
+    const top = Math.max(...group.map(t => v[t]));
+    const leaders = group.filter(t => same(v[t], top));
+    if (leaders.length === 1) return [leaders[0]].concat(breakTie(group.filter(t => t !== leaders[0]), games, above.concat([leaders[0]]), below));
+  }
+  return [group.slice().sort()];
+}
+function rank(games, teams) {
+  const s = stats(games);
+  const v = Object.fromEntries(teams.map(t => [t, pct(val(s,t,"w"), val(s,t,"l")) || 0]));
+  const groups = groupsBy(teams.slice().sort(), v);
+  let slots = [];
+  groups.forEach((g, i) => { slots = slots.concat(breakTie(g, games, slots.slice(), groups.slice(i + 1))); });
+  return slots;
+}
+const COLS = ["W-L", "Pct.", "Ind. matches"];
+function cells(games, t) {
+  const s = stats(games);
+  const w = val(s,t,"w"), l = val(s,t,"l"), p = pct(w, l);
+  return [`${w}-${l}`, `<b>${p === null ? "—" : p.toFixed(3).replace(/^0/, "")}</b>`, `${val(s,t,"mw")}-${val(s,t,"ml")}`];
+}
+
+let picks = {};
+function drawGames() {
+  const box = document.getElementById("games");
+  box.innerHTML = "";
+  CFG.remaining.forEach(([h, a], i) => {
+    const p = picks[i];
+    const div = document.createElement("div");
+    div.className = "game";
+    const opts = [["", () => "Not played"]].concat(RES);
+    let score = "";
+    if (p && SCORE_CHOICES) {
+      const win = p.r === "H" ? h : a;
+      const cur = p.r === "H" ? [p.hg, p.ag] : [p.ag, p.hg];
+      score = `<span class="score">${win} wins <select data-i="${i}">` +
+        SCORE_CHOICES.map(c => `<option value="${c}" ${c[0] === cur[0] && c[1] === cur[1] ? "selected" : ""}>${c[0]}-${c[1]}</option>`).join("") +
+        `</select></span>`;
+    } else if (p) {
+      score = `<span class="score">${a} <input data-i="${i}" data-side="a" type="number" min="0" value="${p.ag}"> –
+               <input data-i="${i}" data-side="h" type="number" min="0" value="${p.hg}"> ${h}</span>`;
+    }
+    div.innerHTML = `<span class="name">${a} at ${h}</span>
+      <span class="seg">${opts.map(([k, l]) => `<button data-i="${i}" data-k="${k}" class="${(p ? p.r : "") === k ? "on" : ""}">${l(k === "H" ? h : a)}</button>`).join("")}</span>${score}`;
+    box.appendChild(div);
+  });
+  box.querySelectorAll("button").forEach(b => b.onclick = () => {
+    const i = +b.dataset.i, k = b.dataset.k;
+    if (!k) delete picks[i]; else picks[i] = {r:k, hg:DEF[k][0], ag:DEF[k][1]};
+    drawGames(); drawTable();
+  });
+  box.querySelectorAll("select").forEach(sel => sel.onchange = () => {
+    const p = picks[+sel.dataset.i], [w, l] = sel.value.split(",").map(Number);
+    if (p.r === "H") { p.hg = w; p.ag = l; } else { p.ag = w; p.hg = l; }
+    drawTable();
+  });
+  box.querySelectorAll("input").forEach(inp => inp.oninput = () => {
+    const p = picks[+inp.dataset.i];
+    const v = Math.max(0, parseInt(inp.value || "0", 10));
+    if (inp.dataset.side === "h") p.hg = v; else p.ag = v;
+    p.r = p.hg > p.ag ? "H" : p.hg < p.ag ? "A" : "D";
+    drawTable();
+    inp.closest(".game").querySelectorAll("button").forEach(b => b.classList.toggle("on", b.dataset.k === p.r));
+  });
+}
+function drawTable() {
+  const sim = CFG.remaining.map(([h, a], i) => picks[i] ? [h, a, picks[i].hg, picks[i].ag] : null).filter(Boolean);
+  const games = CFG.played.concat(sim);
+  let place = 1, rows = "";
+  for (const slot of rank(games, CFG.teams)) {
+    const group = Array.isArray(slot) ? slot : [slot];
+    const label = group.length > 1 ? `${place}–${place + group.length - 1}` : `${place}`;
+    group.forEach(t => {
+      const last = place + group.length - 1;
+      const st = (typeof STATUS === "function") ? STATUS(t, games, group) : place > CFG.q ? "<span class='tag outt'>Out</span>"
+               : group.length > 1 ? `<span class='tag tie'>${UNRESOLVED}</span>`
+               : "<span class='tag'>In</span>";
+      const cut = last === CFG.q && t === group[group.length - 1];
+      rows += `<tr class="${cut ? "cut" : ""}"><td class="num">${label}</td><td><b>${t}</b></td>` +
+        cells(games, t).map(c => `<td class="num">${c}</td>`).join("") + `<td>${st}</td></tr>`;
+    });
+    place += group.length;
+  }
+  document.getElementById("stand").innerHTML =
+    `<tr><th class="num">${typeof POS_LABEL === "string" ? POS_LABEL : "Seed"}</th><th>Team</th>` + COLS.map(c => `<th class="num">${c}</th>`).join("") + `<th></th></tr>` + rows;
+}
+document.getElementById("reset").onclick = () => { picks = {}; drawGames(); drawTable(); };
+if (!CFG.remaining.length) document.getElementById("games").innerHTML = "<p class='small'>All matches have been played.</p>";
+else drawGames();
+drawTable();
+</script>
+</body></html>
