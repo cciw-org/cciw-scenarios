@@ -166,3 +166,62 @@ function cells(games, t) {
   return [rec, `<b>${pctOf(s, t).toFixed(3).replace(/^0/, "")}</b>`];
 }
 """
+
+
+# ---------- clinching, worked out directly (works with any number of duals left) ----------
+def _rec(games, team):
+    s = stats(games)[team]
+    return s["w"], s["l"], s["t"]
+
+
+def _p(w, l, t):
+    n = w + l + t
+    return Fraction(2 * w + t, 2 * n) if n else Fraction(0)
+
+
+def _bounds(team, played, remaining, forced):
+    """(lowest, highest) final pct for `team`; `forced` maps a remaining dual -> winner already decided."""
+    w, l, t = _rec(played, team)
+    lo_w, lo_l, hi_w, hi_l = w, l, w, l
+    for g in remaining:
+        if team not in g:
+            continue
+        if g in forced:
+            if forced[g] == team:
+                lo_w += 1; hi_w += 1
+            else:
+                lo_l += 1; hi_l += 1
+        else:
+            lo_l += 1; hi_w += 1
+    return _p(lo_w, lo_l, t), _p(hi_w, hi_l, t)
+
+
+def clinch_watch(team, played, remaining, teams, order):
+    """For `team` winning its remaining duals in date order (`order` = list of its remaining duals),
+    return (share_at, outright_at): how many wins it needs (0 = already clinched, None = can't
+    clinch on its own) to guarantee at least a share / the outright title."""
+    sched = played + [(h, a, 0, 0) for h, a in remaining]
+    rivals = [r for r in teams if r != team and eligible(r, sched)]
+    share_at = outright_at = None
+    for j in range(len(order) + 1):
+        forced = {g: team for g in order[:j]}
+        my_lo, _ = _bounds(team, played, remaining, forced)
+        rmax = [_bounds(r, played, remaining, forced)[1] for r in rivals]
+        if share_at is None and all(my_lo >= x for x in rmax):
+            share_at = j
+        if outright_at is None and all(my_lo > x for x in rmax):
+            outright_at = j
+    return share_at, outright_at
+
+
+def can_still_win(team, played, remaining, teams):
+    """False if some eligible rival is guaranteed to finish above `team` even if `team` wins out."""
+    sched = played + [(h, a, 0, 0) for h, a in remaining]
+    forced = {g: team for g in remaining if team in g}
+    _, my_hi = _bounds(team, played, remaining, forced)
+    for r in teams:
+        if r != team and eligible(r, sched):
+            r_lo, _ = _bounds(r, played, remaining, forced)
+            if r_lo > my_hi:
+                return False
+    return True

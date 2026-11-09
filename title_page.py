@@ -162,7 +162,21 @@ def build_title(key):
         ineligible = [(t, E.why_not(t, sched)) for t in teams if not E.eligible(t, sched)]
 
     sections = ""
-    if not known:
+    wrestling_sections = ""
+    if cfg["kind"] == "wrestling":
+        wrestling_sections = wrestling_extras(played, remaining, teams, dates, game_name, day)
+        if not known:
+            # too many duals left to list every combination: work out who's alive directly
+            sched = played + [(h, a, 0, 0) for h, a in remaining]
+            elig = [t for t in teams if E.eligible(t, sched)]
+            alive_ = [t for t in elig if E.can_still_win(t, played, remaining, teams)]
+            clinched = [t for t in alive_ if E.clinch_watch(t, played, remaining, teams, [])[0] == 0]
+            alive = [t for t in alive_ if t not in clinched]
+            out_teams = [t for t in current_order if t not in alive_]
+            worst = {t: (0 if E.clinch_watch(t, played, remaining, teams, [])[1] == 0 else 3) for t in teams}
+    if not known and cfg["kind"] == "wrestling":
+        pass
+    elif not known:
         sections = (f"<div class='panel'><p class='lead'>Title scenarios appear once {MAX_LEFT} or fewer conference "
                     f"{gN} remain ({n} left now).</p></div>")
     elif n == 0:
@@ -215,6 +229,9 @@ def build_title(key):
                    f"{_names(champs)} are co-champions.")
             sections = (f"<h2>Final</h2><div class='panel'><p class='lead'>The regular season is complete. {esc(who)}</p>"
                         f"</div>") + sections
+    if cfg["kind"] == "wrestling":
+        sections = wrestling_sections + sections
+        ineligible = []          # covered by the eligibility table
     if ineligible:
         sections += ("<h2>Title eligibility</h2><div class='panel'><p class='small'>These teams can't win the title "
                      "because of their schedules:</p><ul class='why'>" +
@@ -224,7 +241,8 @@ def build_title(key):
     thru = ""
     if played_dates:
         last = max(played_dates)
-        thru = f"Standings through the {gN} of {last.strftime('%A')}, {day(last, False)}, {last.year}. "
+        word_ = "Results" if cfg["kind"] == "wrestling" else "Standings"
+        thru = f"{word_} through the {gN} of {last.strftime('%A')}, {day(last, False)}, {last.year}. "
     rem_dates = sorted(d for d in dates.values() if d)
     if n == 0:
         rem = "The regular season is complete. "
@@ -244,13 +262,75 @@ def build_title(key):
         eliminated=chips(out_teams, "out", "No team is out of the title race yet."),
         sections=sections, footer=esc(E.footer() if callable(getattr(E, "footer", None)) else E.FOOTER),
         engine=E.JS, data=json.dumps(data), gword=g1, gwords=gN,
-        c1="Clinched", c2="Still in the title race", c3="Out of the title race", heading="Title Race",
+        c1="Clinched", c2="Still in the title race", c3="Out of the title race",
+        heading="Championship Race" if cfg["kind"] == "wrestling" else "Title Race",
     )
     os.makedirs(folder, exist_ok=True)
     out = os.path.join(folder, "index.html")
     with open(out, "w") as f:
         f.write(page)
     print(f"{cfg['name']}: {out} written ({n} {gN} left)")
+
+
+def wrestling_extras(played, remaining, teams, dates, game_name, day):
+    """Eligibility table and clinch watch for wrestling."""
+    sched = played + [(h, a, 0, 0) for h, a in remaining]
+    opp = E.opponents(sched)
+    done = E.opponents(played)
+    rows = ""
+    for t in sorted(teams, key=lambda t: (not E.eligible(t, sched), t)):
+        ok = E.eligible(t, sched)
+        tops = [p for p in E.PREV_TOP if p != t]
+        has_tops = [p for p in tops if p in opp[t]]
+        top_txt = (f"{len(has_tops)} of {len(tops)}" + ("" if len(has_tops) == len(tops) else
+                   f" (missing {_names([p for p in tops if p not in opp[t]])})")) if tops else "—"
+        rows += (f"<tr><td class='rowh'>{esc(t)}</td><td class='num'>{len(opp[t])} ({E.MIN_OPP} needed)"
+                 f"<div class='gl'>{len(done[t])} wrestled so far</div></td><td>{esc(top_txt)}</td>"
+                 f"<td><span class='st {'in' if ok else 'out'}'>{'Eligible' if ok else 'Not eligible'}</span></td></tr>")
+    prev = _names(E.PREV_TOP) if E.PREV_TOP else "last season's top 4"
+    elig_html = (f"<h2>Who's eligible</h2><div class='panel'><p class='small'>To be eligible for the regular-season "
+                 f"championship, a team must wrestle at least {E.MIN_OPP} conference opponents, including "
+                 f"{esc(prev)}. Counts include duals still on the schedule.</p>"
+                 f"<div class='tw'><table class='teams'><tr><th>Team</th><th class='num'>Conference opponents</th>"
+                 f"<th>Last season's top 4 on schedule</th><th>Status</th></tr>{rows}</table></div></div>")
+
+    def dkey(g):
+        return dates.get(g) or datetime.max
+
+    elig = [t for t in teams if E.eligible(t, sched)]
+    items = ""
+    for t in sorted(elig, key=lambda t: (-float(E.pct(E.stats(played)[t])), t)):
+        if not E.can_still_win(t, played, remaining, teams):
+            items += f"<li><b>{esc(t)}</b> ({E.record_text(t, played)}): can no longer win the title.</li>"
+            continue
+        order = sorted([g for g in remaining if t in g], key=dkey)
+        share_at, out_at = E.clinch_watch(t, played, remaining, teams, order)
+
+        def when(j, what):
+            if j == 0:
+                return f"has clinched {what}"
+            if j is None:
+                return f"can't clinch {what} on its own and needs help from other results"
+            g = order[j - 1]
+            opp_ = g[1] if g[0] == t else g[0]
+            at = "at " if g[0] != t else "vs. "
+            d = day(dates.get(g))
+            if j == 1:
+                return f"clinches {what} with a win {at}{opp_}" + (f" ({d})" if d else "")
+            return (f"clinches {what} by winning its next {j} duals, the last of them {at}{opp_}"
+                    + (f" ({d})" if d else ""))
+        parts = [when(share_at, "at least a share")]
+        if out_at != share_at:
+            parts.append(when(out_at, "the outright title"))
+        elif share_at is not None:
+            parts[0] = parts[0].replace("at least a share", "the outright title")
+        left = len(order)
+        items += (f"<li><b>{esc(t)}</b> ({E.record_text(t, played)}, {left} dual{'s' if left != 1 else ''} left): "
+                  + "; ".join(parts) + ".</li>")
+    watch = (f"<h2>Clinch watch</h2><div class='panel'><p class='small'>For each eligible team, the dual where a win "
+             f"would lock up the championship no matter what else happens, assuming it wins its duals in order.</p>"
+             f"<ul class='why'>{items}</ul></div>") if remaining and items else ""
+    return elig_html + watch
 
 
 def _names(g):
