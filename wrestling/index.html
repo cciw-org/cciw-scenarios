@@ -1,0 +1,225 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CCIW Men&#x27;s Wrestling Title Race</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#f3f5f8; --card:#ffffff; --ink:#172033; --muted:#5b6475; --line:#dce2eb; --head:#e8eef6;
+  --accent:#1d4f91; --in:#1d4f91; --alive:#8a5a00; --out:#a3302c; --sub:#38445a;
+}
+* { box-sizing:border-box; }
+body { margin:0; background:var(--bg); color:var(--ink); font:15px/1.5 Barlow, -apple-system, "Segoe UI", Arial, sans-serif; }
+.page { max-width:1120px; margin:0 auto; padding:28px 16px 40px; }
+.top { display:flex; align-items:center; gap:18px; margin-bottom:14px; }
+.top h1 { margin:0; }
+.logo { height:96px; width:auto; flex:none; }
+@media (max-width:600px) { .logo { height:64px; } }
+.eyebrow { font:700 13px/1 "Barlow Condensed", sans-serif; letter-spacing:.12em; text-transform:uppercase; color:var(--accent); margin:0 0 10px; }
+h1 { font:800 clamp(40px,7vw,58px)/1 "Barlow Condensed", sans-serif; margin:0 0 14px; letter-spacing:-.01em; }
+.intro { color:var(--muted); max-width:580px; margin:0 0 26px; }
+.status { display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:14px; margin-bottom:36px; }
+.card, .panel { background:var(--card); border:1px solid var(--line); border-radius:6px; }
+.card { padding:16px 16px 18px; }
+.card h3 { font:700 18px/1 "Barlow Condensed", sans-serif; text-transform:uppercase; letter-spacing:.02em; margin:4px 0 14px; color:var(--sub); }
+.chip { display:inline-block; font-weight:600; font-size:13px; padding:3px 10px; margin:0 6px 6px 0; border-radius:999px; border:1px solid; }
+.chip.in { color:var(--in); border-color:var(--in); }
+.chip.alive { color:var(--alive); border-color:#b98a2c; }
+.chip.out { color:var(--out); border-color:var(--out); }
+.none { color:var(--muted); font-size:14px; margin:0; }
+h2 { font:700 26px/1.1 "Barlow Condensed", sans-serif; margin:34px 0 14px; }
+.panel { padding:18px 16px; }
+.lead { font-weight:600; margin:0 0 8px; }
+.small { font-size:14px; color:var(--muted); margin:0 0 10px; }
+.small b { color:var(--sub); }
+.colnote { font-size:12px; color:var(--muted); margin:0 0 6px; }
+.tw { overflow-x:auto; border:1px solid var(--line); border-radius:6px; margin:4px 0 14px; }
+table { width:100%; border-collapse:collapse; }
+th { background:var(--head); font:700 13px/1.2 "Barlow Condensed", sans-serif; letter-spacing:.06em; text-transform:uppercase;
+      color:var(--sub); text-align:left; padding:10px 10px; white-space:nowrap; }
+td { border-top:1px solid var(--line); padding:9px 10px; vertical-align:top; }
+.r { text-align:right; }
+td.rowh { font-weight:600; white-space:nowrap; }
+.grid td.r div { white-space:nowrap; }
+.pl { display:inline-block; min-width:18px; color:var(--muted); font-weight:600; margin-right:4px; }
+.games { display:grid; gap:10px; margin-bottom:16px; }
+.game { display:flex; flex-wrap:wrap; align-items:center; gap:8px 12px; padding:10px 12px; border:1px solid var(--line); border-radius:6px; }
+.game .name { font-weight:600; min-width:220px; flex:1; }
+.game .when { font-weight:400; color:var(--muted); font-size:13px; }
+.seg { display:inline-flex; border:1px solid var(--line); border-radius:6px; overflow:hidden; }
+.seg button { font:600 13px Barlow, sans-serif; border:0; background:#fff; color:var(--ink); padding:7px 11px; cursor:pointer; border-left:1px solid var(--line); }
+.seg button:first-child { border-left:0; }
+.seg button.on { background:var(--accent); color:#fff; }
+.score { display:inline-flex; align-items:center; gap:4px; font-size:13px; color:var(--muted); }
+.score input, .score select { padding:5px; font:inherit; color:var(--ink); border:1px solid var(--line); border-radius:4px; background:#fff; }
+.score input { width:44px; text-align:center; }
+.stand td.num, .stand th.num { text-align:center; }
+.stand tr.cut td { border-bottom:2px solid var(--accent); }
+.tag { font-size:12px; font-weight:600; color:var(--accent); white-space:nowrap; }
+.tag.outt { color:var(--out); }
+.tag.tie { color:var(--alive); }
+.reset { font:600 13px Barlow, sans-serif; background:none; border:1px solid var(--line); border-radius:6px; padding:6px 12px; cursor:pointer; color:var(--ink); }
+table.teams td { vertical-align:top; }
+.gl { font-weight:400; font-size:12px; color:var(--muted); white-space:normal; max-width:220px; }
+.ol { display:block; font:700 12px/1.2 "Barlow Condensed", sans-serif; letter-spacing:.06em; text-transform:uppercase; color:var(--muted); margin-bottom:2px; }
+.st { font-size:14px; }
+.st.in { color:var(--in); font-weight:700; }
+.st.out { color:var(--out); font-weight:700; }
+.st.help { color:var(--ink); }
+ol.final { list-style:none; padding:0; margin:0 0 14px; display:grid; grid-template-columns:repeat(auto-fill,minmax(230px,1fr)); gap:6px 16px; }
+ol.final li { font-weight:600; }
+.seed { display:inline-block; min-width:30px; color:var(--accent); font-weight:700; }
+.rec { font-weight:400; color:var(--muted); font-size:14px; }
+ul.why { margin:0; padding-left:18px; color:var(--ink); font-size:14px; }
+ul.why li { margin-bottom:6px; }
+.gwrap { margin-bottom:16px; }
+.gwrap summary { cursor:pointer; font-weight:600; margin-bottom:10px; color:var(--accent); }
+.foot { font-size:13px; color:var(--muted); margin-top:26px; }
+@media (max-width:600px) { .game .name { min-width:100%; } }
+</style></head><body><div class="page">
+<div class="top"><img class="logo" src="https://dbukjj6eu5tsf.cloudfront.net/sidearm.sites/cciw.org/images/responsive_2021/main-color.svg" alt="CCIW logo"><div>
+<p class="eyebrow">CCIW Men&#x27;s Wrestling</p>
+<h1>Title Race</h1></div></div>
+<p class="intro">Standings through the duals of Sunday, Nov. 8, 2026. 23 conference duals remain, Nov. 10 to Feb. 4. The eligible team with the best conference dual record is the CCIW regular-season champion. There is no tiebreaker, so eligible teams tied for first are co-champions.</p>
+
+<div class="status">
+  <div class="card"><h3>Clinched</h3><p class='none'>No team has clinched a share yet.</p></div>
+  <div class="card"><h3>Still in the title race</h3><p class='none'>The title is decided.</p></div>
+  <div class="card"><h3>Out of the title race</h3><span class='chip out'>Millikin</span><span class='chip out'>Augustana</span><span class='chip out'>Aurora</span><span class='chip out'>Carthage</span><span class='chip out'>Concordia-Wisconsin</span><span class='chip out'>Elmhurst</span><span class='chip out'>Illinois Wesleyan</span><span class='chip out'>MSOE</span><span class='chip out'>North Central</span><span class='chip out'>Wheaton</span></div>
+</div>
+
+<div class='panel'><p class='lead'>Title scenarios appear once 14 or fewer conference duals remain (23 left now).</p></div><h2>Title eligibility</h2><div class='panel'><p class='small'>These teams can't win the title because of their schedules:</p><ul class='why'><li><b>Augustana</b>: 4 conference opponents on its schedule; 7 required</li><li><b>Aurora</b>: 3 conference opponents on its schedule; 7 required; doesn&#x27;t wrestle Elmhurst</li><li><b>Carthage</b>: 6 conference opponents on its schedule; 7 required; doesn&#x27;t wrestle Millikin</li><li><b>Concordia-Wisconsin</b>: 5 conference opponents on its schedule; 7 required; doesn&#x27;t wrestle North Central and Millikin</li><li><b>Elmhurst</b>: 6 conference opponents on its schedule; 7 required</li><li><b>Illinois Wesleyan</b>: 4 conference opponents on its schedule; 7 required; doesn&#x27;t wrestle Elmhurst</li><li><b>MSOE</b>: 2 conference opponents on its schedule; 7 required; doesn&#x27;t wrestle North Central, Millikin and Elmhurst</li><li><b>Millikin</b>: 6 conference opponents on its schedule; 7 required</li><li><b>Wheaton</b>: 5 conference opponents on its schedule; 7 required</li></ul></div>
+
+<h2>Scenario builder</h2>
+<div class="panel">
+  <p class="small">Pick a result for any remaining dual and adjust the score if you like. The standings update with every tiebreaker applied.</p>
+  <details class="gwrap" id="gwrap" open><summary id="gsum">Remaining duals</summary><div class="games" id="games"></div></details>
+  <div class="tw"><table class="stand" id="stand"></table></div>
+  <button class="reset" id="reset">Reset</button>
+</div>
+
+<p class="foot">Standings: conference dual-meet winning percentage. To be eligible for the regular-season title, a team must wrestle at least 7 conference opponents, including North Central, Millikin and Elmhurst. There is no tiebreaker: eligible teams tied for first are co-champions. Eligibility counts duals already wrestled plus those still on the schedule. Updated automatically from cciw.org results.</p>
+</div>
+
+<script>
+const CFG = {"teams": ["Augustana", "Aurora", "Carthage", "Concordia-Wisconsin", "Elmhurst", "Illinois Wesleyan", "MSOE", "Millikin", "North Central", "Wheaton"], "played": [["Illinois Wesleyan", "Millikin", 8, 41]], "remaining": [["North Central", "Illinois Wesleyan"], ["North Central", "Carthage"], ["Elmhurst", "Wheaton"], ["Concordia-Wisconsin", "Carthage"], ["Augustana", "Elmhurst"], ["North Central", "Wheaton"], ["Carthage", "MSOE"], ["Augustana", "North Central"], ["Aurora", "Millikin"], ["Elmhurst", "Carthage"], ["Illinois Wesleyan", "Augustana"], ["Millikin", "Elmhurst"], ["Millikin", "Wheaton"], ["Augustana", "Millikin"], ["Carthage", "Wheaton"], ["Concordia-Wisconsin", "Wheaton"], ["Concordia-Wisconsin", "Elmhurst"], ["Carthage", "Aurora"], ["Elmhurst", "North Central"], ["Illinois Wesleyan", "Concordia-Wisconsin"], ["Millikin", "North Central"], ["MSOE", "Concordia-Wisconsin"], ["North Central", "Aurora"]], "q": 1, "min_opp": 7, "prev_top": ["North Central", "Millikin", "Elmhurst"]};
+
+const RES = [["A", a => a + " win"], ["H", h => h + " win"]];
+const DEF = {H:[24,12], A:[12,24]};
+const SCORE_CHOICES = [];
+const UNRESOLVED = "Tied";
+const POS_LABEL = "Pos";
+function stats(games) {
+  const s = {};
+  const g = t => s[t] || (s[t] = {w:0, l:0, t:0});
+  for (const [h, a, hs, as] of games) {
+    const H = g(h), A = g(a);
+    if (hs > as) { H.w++; A.l++; } else if (as > hs) { A.w++; H.l++; } else { H.t++; A.t++; }
+  }
+  return s;
+}
+const val = (s, t, k) => (s[t] ? s[t][k] : 0);
+const pctOf = (s, t) => { const n = val(s,t,"w") + val(s,t,"l") + val(s,t,"t"); return n ? (2*val(s,t,"w") + val(s,t,"t")) / (2*n) : 0; };
+const same = (x, y) => Math.abs(x - y) < 1e-9;
+function rank(games, teams) {
+  const s = stats(games);
+  const vals = [];
+  for (const t of teams) if (!vals.some(v => same(v, pctOf(s, t)))) vals.push(pctOf(s, t));
+  vals.sort((x, y) => y - x);
+  return vals.map(v => { const g = teams.filter(t => same(pctOf(s, t), v)).sort(); return g.length > 1 ? g : g[0]; });
+}
+function eligibleTeams() {
+  const opp = {};
+  for (const [h, a] of CFG.played.concat(CFG.remaining)) {
+    (opp[h] = opp[h] || new Set()).add(a); (opp[a] = opp[a] || new Set()).add(h);
+  }
+  return CFG.teams.filter(t => opp[t] && opp[t].size >= CFG.min_opp && CFG.prev_top.every(p => p === t || opp[t].has(p)));
+}
+function STATUS(t, games) {
+  const ok = eligibleTeams();
+  if (!ok.includes(t)) return "<span class='tag outt'>Not eligible</span>";
+  const s = stats(games);
+  const best = Math.max(...ok.map(x => pctOf(s, x)));
+  if (!same(pctOf(s, t), best)) return "";
+  return ok.filter(x => same(pctOf(s, x), best)).length > 1 ? "<span class='tag'>Co-champion</span>" : "<span class='tag'>Champion</span>";
+}
+const COLS = ["W-L", "Pct."];
+function cells(games, t) {
+  const s = stats(games);
+  const rec = `${val(s,t,"w")}-${val(s,t,"l")}` + (val(s,t,"t") ? `-${val(s,t,"t")}` : "");
+  return [rec, `<b>${pctOf(s, t).toFixed(3).replace(/^0/, "")}</b>`];
+}
+
+let picks = {};
+function drawGames() {
+  const box = document.getElementById("games");
+  box.innerHTML = "";
+  CFG.remaining.forEach(([h, a], i) => {
+    const p = picks[i];
+    const div = document.createElement("div");
+    div.className = "game";
+    const opts = [["", () => "Not played"]].concat(RES);
+    let score = "";
+    if (p && SCORE_CHOICES && SCORE_CHOICES.length) {
+      const win = p.r === "H" ? h : a;
+      const cur = p.r === "H" ? [p.hg, p.ag] : [p.ag, p.hg];
+      score = `<span class="score">${win} wins <select data-i="${i}">` +
+        SCORE_CHOICES.map(c => `<option value="${c}" ${c[0] === cur[0] && c[1] === cur[1] ? "selected" : ""}>${c[0]}-${c[1]}</option>`).join("") +
+        `</select></span>`;
+    } else if (p && SCORE_CHOICES === null) {
+      score = `<span class="score">${a} <input data-i="${i}" data-side="a" type="number" min="0" value="${p.ag}"> –
+               <input data-i="${i}" data-side="h" type="number" min="0" value="${p.hg}"> ${h}</span>`;
+    }
+    div.innerHTML = `<span class="name">${a} at ${h}</span>
+      <span class="seg">${opts.map(([k, l]) => `<button data-i="${i}" data-k="${k}" class="${(p ? p.r : "") === k ? "on" : ""}">${l(k === "H" ? h : a)}</button>`).join("")}</span>${score}`;
+    box.appendChild(div);
+  });
+  box.querySelectorAll("button").forEach(b => b.onclick = () => {
+    const i = +b.dataset.i, k = b.dataset.k;
+    if (!k) delete picks[i]; else picks[i] = {r:k, hg:DEF[k][0], ag:DEF[k][1]};
+    drawGames(); drawTable();
+  });
+  box.querySelectorAll("select").forEach(sel => sel.onchange = () => {
+    const p = picks[+sel.dataset.i], [w, l] = sel.value.split(",").map(Number);
+    if (p.r === "H") { p.hg = w; p.ag = l; } else { p.ag = w; p.hg = l; }
+    drawTable();
+  });
+  box.querySelectorAll("input").forEach(inp => inp.oninput = () => {
+    const p = picks[+inp.dataset.i];
+    const v = Math.max(0, parseInt(inp.value || "0", 10));
+    if (inp.dataset.side === "h") p.hg = v; else p.ag = v;
+    p.r = p.hg > p.ag ? "H" : p.hg < p.ag ? "A" : "D";
+    drawTable();
+    inp.closest(".game").querySelectorAll("button").forEach(b => b.classList.toggle("on", b.dataset.k === p.r));
+  });
+}
+function drawTable() {
+  const sim = CFG.remaining.map(([h, a], i) => picks[i] ? [h, a, picks[i].hg, picks[i].ag] : null).filter(Boolean);
+  const games = CFG.played.concat(sim);
+  let place = 1, rows = "";
+  for (const slot of rank(games, CFG.teams)) {
+    const group = Array.isArray(slot) ? slot : [slot];
+    const label = group.length > 1 ? `${place}–${place + group.length - 1}` : `${place}`;
+    group.forEach(t => {
+      const last = place + group.length - 1;
+      const st = (typeof STATUS === "function") ? STATUS(t, games, group) : place > CFG.q ? "<span class='tag outt'>Out</span>"
+               : group.length > 1 ? `<span class='tag tie'>${UNRESOLVED}</span>`
+               : "<span class='tag'>In</span>";
+      const cut = last === CFG.q && t === group[group.length - 1];
+      rows += `<tr class="${cut ? "cut" : ""}"><td class="num">${label}</td><td><b>${t}</b></td>` +
+        cells(games, t).map(c => `<td class="num">${c}</td>`).join("") + `<td>${st}</td></tr>`;
+    });
+    place += group.length;
+  }
+  document.getElementById("stand").innerHTML =
+    `<tr><th class="num">${typeof POS_LABEL === "string" ? POS_LABEL : "Seed"}</th><th>Team</th>` + COLS.map(c => `<th class="num">${c}</th>`).join("") + `<th></th></tr>` + rows;
+}
+document.getElementById("reset").onclick = () => { picks = {}; drawGames(); drawTable(); };
+document.getElementById("gsum").textContent = `Remaining duals (${CFG.remaining.length})`;
+if (CFG.remaining.length > 12) document.getElementById("gwrap").open = false;
+if (!CFG.remaining.length) document.getElementById("games").innerHTML = "<p class='small'>All duals have been played.</p>";
+else drawGames();
+drawTable();
+</script>
+</body></html>

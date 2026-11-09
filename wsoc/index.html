@@ -73,6 +73,8 @@ ol.final li { font-weight:600; }
 .rec { font-weight:400; color:var(--muted); font-size:14px; }
 ul.why { margin:0; padding-left:18px; color:var(--ink); font-size:14px; }
 ul.why li { margin-bottom:6px; }
+.gwrap { margin-bottom:16px; }
+.gwrap summary { cursor:pointer; font-weight:600; margin-bottom:10px; color:var(--accent); }
 .foot { font-size:13px; color:var(--muted); margin-top:26px; }
 @media (max-width:600px) { .game .name { min-width:100%; } }
 </style></head><body><div class="page">
@@ -92,7 +94,7 @@ ul.why li { margin-bottom:6px; }
 <h2>Scenario builder</h2>
 <div class="panel">
   <p class="small">Pick a result for any remaining game and adjust the score if you like. The standings update with every tiebreaker applied.</p>
-  <div class="games" id="games"></div>
+  <details class="gwrap" id="gwrap" open><summary id="gsum">Remaining games</summary><div class="games" id="games"></div></details>
   <div class="tw"><table class="stand" id="stand"></table></div>
   <button class="reset" id="reset">Reset</button>
 </div>
@@ -159,13 +161,13 @@ function drawGames() {
     div.className = "game";
     const opts = [["", () => "Not played"]].concat(RES);
     let score = "";
-    if (p && SCORE_CHOICES) {
+    if (p && SCORE_CHOICES && SCORE_CHOICES.length) {
       const win = p.r === "H" ? h : a;
       const cur = p.r === "H" ? [p.hg, p.ag] : [p.ag, p.hg];
       score = `<span class="score">${win} wins <select data-i="${i}">` +
         SCORE_CHOICES.map(c => `<option value="${c}" ${c[0] === cur[0] && c[1] === cur[1] ? "selected" : ""}>${c[0]}-${c[1]}</option>`).join("") +
         `</select></span>`;
-    } else if (p) {
+    } else if (p && SCORE_CHOICES === null) {
       score = `<span class="score">${a} <input data-i="${i}" data-side="a" type="number" min="0" value="${p.ag}"> –
                <input data-i="${i}" data-side="h" type="number" min="0" value="${p.hg}"> ${h}</span>`;
     }
@@ -214,6 +216,8 @@ function drawTable() {
     `<tr><th class="num">${typeof POS_LABEL === "string" ? POS_LABEL : "Seed"}</th><th>Team</th>` + COLS.map(c => `<th class="num">${c}</th>`).join("") + `<th></th></tr>` + rows;
 }
 document.getElementById("reset").onclick = () => { picks = {}; drawGames(); drawTable(); };
+document.getElementById("gsum").textContent = `Remaining games (${CFG.remaining.length})`;
+if (CFG.remaining.length > 12) document.getElementById("gwrap").open = false;
 if (!CFG.remaining.length) document.getElementById("games").innerHTML = "<p class='small'>All games have been played.</p>";
 else drawGames();
 drawTable();
