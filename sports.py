@@ -48,6 +48,37 @@ SPORTS = {
         "qualifiers": 6,
         "tournament": "CCIW Championships",
     },
+    "mbb": {
+        "name": "CCIW Men's Basketball",
+        "standings": 1225,
+        "kind": "basketball",
+        "meetings": 2,               # double round-robin
+        "folder": "mbb",             # page address: .../cciw-scenarios/mbb/
+        "qualifiers": 6,
+        "tournament": "CCIW Tournament",
+    },
+    "wbb": {
+        "name": "CCIW Women's Basketball",
+        "standings": 1226,
+        "kind": "basketball",
+        "meetings": 2,
+        "folder": "wbb",             # page address: .../cciw-scenarios/wbb/
+        "qualifiers": 6,
+        "tournament": "CCIW Tournament",
+    },
+    "wrestling": {
+        "name": "CCIW Men's Wrestling",
+        "standings": "path=wrestling",   # always the current season
+        "kind": "wrestling",             # regular-season title only; ties are co-champions
+        "folder": "wrestling",           # page address: .../cciw-scenarios/wrestling/
+        "qualifiers": 1,
+        "tournament": "regular-season title",
+        "conference_games_only": True,   # ignore tournaments and unmarked events on the schedules
+        "min_opponents": 7,
+        # Previous season's top 4 (all four must be on a team's schedule to be title-eligible).
+        # Update this each year.
+        "previous_top": ["North Central", "Millikin", "Elmhurst"],
+    },
 }
 
 LOGO_URL = "https://dbukjj6eu5tsf.cloudfront.net/sidearm.sites/cciw.org/images/responsive_2021/main-color.svg"

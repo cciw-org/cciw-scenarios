@@ -14,13 +14,15 @@ from collections import defaultdict, Counter
 from datetime import datetime
 from itertools import product, combinations
 
+import bb_tiebreaker
 import cciw_tiebreaker
 import tennis_tiebreaker
 import vb_tiebreaker
 from sports import SPORTS, LOGO_URL
 
-ENGINES = {"soccer": cciw_tiebreaker, "volleyball": vb_tiebreaker, "tennis": tennis_tiebreaker}
-SCENARIOS_UP_TO = {"soccer": 10, "volleyball": 13, "tennis": 13}   # more left than this: skip scenarios
+ENGINES = {"soccer": cciw_tiebreaker, "volleyball": vb_tiebreaker, "tennis": tennis_tiebreaker,
+           "basketball": bb_tiebreaker}
+SCENARIOS_UP_TO = {"soccer": 10, "volleyball": 13, "tennis": 13, "basketball": 12}   # more left than this: skip scenarios
 NUM = ["No", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten",
        "Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen"]
 esc = html.escape
@@ -38,6 +40,14 @@ def build(key):
     folder = cfg["folder"]
     games_file = os.path.join(folder, "games.csv")
     played, remaining = E.load_games(games_file)
+    npi_file = os.path.join(folder, "npi.csv")
+    if hasattr(E, "NPI"):
+        E.NPI.clear()
+        if os.path.exists(npi_file):
+            with open(npi_file, newline="") as f:
+                for r in csv.DictReader(f):
+                    if r.get("npi", "").strip():
+                        E.NPI[r["team"].strip()] = float(r["npi"])
     teams = sorted({t for g in played for t in g[:2]} | {t for g in remaining for t in g})
     n = len(remaining)
     g1, gN = E.GAME_WORD
@@ -413,6 +423,8 @@ def build(key):
     intro = f"{thru}{rem}The top {word(Q, False)} of {len(teams)} teams qualify for the {cfg['tournament']}."
 
     data = {"teams": teams, "played": played, "remaining": remaining, "q": Q}
+    if getattr(E, "NPI", None):
+        data["npi"] = dict(E.NPI)
     if cfg["kind"] == "soccer":
         data |= {"cap": cciw_tiebreaker.GD_CAP, "scope": cciw_tiebreaker.GD_SCOPE}
     logo = f'<img class="logo" src="{esc(LOGO_URL)}" alt="CCIW logo">' if LOGO_URL else ""
@@ -506,6 +518,8 @@ ol.final li {{ font-weight:600; }}
 .rec {{ font-weight:400; color:var(--muted); font-size:14px; }}
 ul.why {{ margin:0; padding-left:18px; color:var(--ink); font-size:14px; }}
 ul.why li {{ margin-bottom:6px; }}
+.gwrap {{ margin-bottom:16px; }}
+.gwrap summary {{ cursor:pointer; font-weight:600; margin-bottom:10px; color:var(--accent); }}
 .foot {{ font-size:13px; color:var(--muted); margin-top:26px; }}
 @media (max-width:600px) {{ .game .name {{ min-width:100%; }} }}
 </style></head><body><div class="page">
@@ -525,7 +539,7 @@ ul.why li {{ margin-bottom:6px; }}
 <h2>Scenario builder</h2>
 <div class="panel">
   <p class="small">Pick a result for any remaining {gword} and adjust the score if you like. The standings update with every tiebreaker applied.</p>
-  <div class="games" id="games"></div>
+  <details class="gwrap" id="gwrap" open><summary id="gsum">Remaining {gwords}</summary><div class="games" id="games"></div></details>
   <div class="tw"><table class="stand" id="stand"></table></div>
   <button class="reset" id="reset">Reset</button>
 </div>
@@ -546,13 +560,13 @@ function drawGames() {{
     div.className = "game";
     const opts = [["", () => "Not played"]].concat(RES);
     let score = "";
-    if (p && SCORE_CHOICES) {{
+    if (p && SCORE_CHOICES && SCORE_CHOICES.length) {{
       const win = p.r === "H" ? h : a;
       const cur = p.r === "H" ? [p.hg, p.ag] : [p.ag, p.hg];
       score = `<span class="score">${{win}} wins <select data-i="${{i}}">` +
         SCORE_CHOICES.map(c => `<option value="${{c}}" ${{c[0] === cur[0] && c[1] === cur[1] ? "selected" : ""}}>${{c[0]}}-${{c[1]}}</option>`).join("") +
         `</select></span>`;
-    }} else if (p) {{
+    }} else if (p && SCORE_CHOICES === null) {{
       score = `<span class="score">${{a}} <input data-i="${{i}}" data-side="a" type="number" min="0" value="${{p.ag}}"> –
                <input data-i="${{i}}" data-side="h" type="number" min="0" value="${{p.hg}}"> ${{h}}</span>`;
     }}
@@ -601,6 +615,8 @@ function drawTable() {{
     `<tr><th class="num">${{typeof POS_LABEL === "string" ? POS_LABEL : "Seed"}}</th><th>Team</th>` + COLS.map(c => `<th class="num">${{c}}</th>`).join("") + `<th></th></tr>` + rows;
 }}
 document.getElementById("reset").onclick = () => {{ picks = {{}}; drawGames(); drawTable(); }};
+document.getElementById("gsum").textContent = `Remaining {gwords} (${{CFG.remaining.length}})`;
+if (CFG.remaining.length > 12) document.getElementById("gwrap").open = false;
 if (!CFG.remaining.length) document.getElementById("games").innerHTML = "<p class='small'>All {gwords} have been played.</p>";
 else drawGames();
 drawTable();
@@ -611,7 +627,13 @@ drawTable();
 if __name__ == "__main__":
     from title_page import build_title
     for key in (sys.argv[1:] or SPORTS):
-        if SPORTS[key]["kind"] == "football":
-            build_title(key)
-        else:
-            build(key)
+        if not os.path.exists(os.path.join(SPORTS[key]["folder"], "games.csv")):
+            print(f"{SPORTS[key]['name']}: no games.csv yet - skipped (run scrape_cciw.py first)")
+            continue
+        try:
+            if SPORTS[key]["kind"] in ("football", "wrestling"):
+                build_title(key)
+            else:
+                build(key)
+        except Exception as e:      # one sport's problem shouldn't stop the others
+            print(f"{SPORTS[key]['name']}: FAILED - {e}")

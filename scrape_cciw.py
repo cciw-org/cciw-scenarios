@@ -6,6 +6,8 @@ Run:            python3 scrape_cciw.py          (all sports)
 
 Teams and schedule pages are read from the standings page listed in sports.py.
 A result missing from one team's schedule page is taken from the opponent's page.
+Postponed/canceled rows are skipped, and "meetings" in sports.py says how many times each
+pair of teams plays (2 for basketball's double round-robin).
 At the end, the records it worked out are checked against the official standings.
 """
 import csv
@@ -50,10 +52,13 @@ def find_col(table, word):
     return None
 
 
-def read_standings(sid):
+def read_standings(sid, expect=None):
     query = sid if str(sid).startswith("path=") else f"standings={sid}"
     html = fetch(f"{BASE}/standings.aspx?{query}")
     doc = lxml_html.fromstring(html)
+    title = (doc.findtext(".//title") or "").lower()
+    if expect and expect.lower() not in title:
+        raise RuntimeError(f"The standings page shows '{title.strip()}', not {expect} - check the link in sports.py")
     teams = {}
     for a in doc.xpath('//a[contains(@href, "schedule.aspx?schedule=")]'):
         name = a.text_content().strip().strip("*#").strip()
@@ -74,57 +79,87 @@ def read_standings(sid):
     return teams, official
 
 
+# other ways the schedule pages write some schools' names
+ALIASES = {
+    "MSOE": ["Milwaukee School of Engineering"],
+    "Concordia-Wisconsin": ["Concordia University Wisconsin", "Concordia-Wis", "Concordia Wisconsin"],
+    "Concordia Wisconsin": ["Concordia University Wisconsin", "Concordia-Wis", "Concordia-Wisconsin"],
+}
+
+
 def match_team(text, teams):
-    best = None
+    best, best_len = None, 0
     for name in teams:
-        if name.lower() in text.lower() and (best is None or len(name) > len(best)):
-            best = name
+        for spelling in [name] + ALIASES.get(name, []):
+            if spelling.lower() in text.lower() and len(spelling) > best_len:
+                best, best_len = name, len(spelling)
     return best
 
 
 def scrape(key):
     cfg = SPORTS[key]
     print(f"\n{cfg['name']}")
-    teams, official = read_standings(cfg["standings"])
+    teams, official = read_standings(cfg["standings"], cfg["name"].replace("CCIW ", ""))
     if len(teams) < 4:
         raise RuntimeError("Couldn't find the teams on the standings page")
-    games = {}   # each pair of teams meets once in the conference regular season
-    marked_pairs = set()
+    meetings = cfg.get("meetings", 1)          # times each pair plays in the regular season
+    marked, unmarked = {}, {}                    # pair -> {date: game}
     for team, sid in teams.items():
         print(f"  Reading {team}...")
         html = fetch(f"{BASE}/schedule.aspx?schedule={sid}")
         table = pd.read_html(StringIO(html), match="Opponent")[0]
         opp_col, res_col, date_col = find_col(table, "Opponent"), find_col(table, "Result"), find_col(table, "Date")
         is_conf = table.apply(lambda row: any(str(v).strip() == "*" for v in row), axis=1)
-        # conference games first; then unmarked games against conference teams, in case the site
-        # forgot the * (they only count if that pair has no marked game)
-        rows = [(r, True) for _, r in table[is_conf].iterrows()] + [(r, False) for _, r in table[~is_conf].iterrows()]
-        for row, marked in rows:
+        for _, row in table.iterrows():
+            result = str(row[res_col])
+            if re.search(r"postpon|cancel|ppd|suspend", result, re.I):
+                continue                                  # the rescheduled game has its own row
             opp_text = str(row[opp_col])
             opp = match_team(opp_text, teams)
             if opp is None or opp == team:
-                if marked:
+                if is_conf[_]:
                     print(f"    Couldn't match opponent '{opp_text}' - skipped")
                 continue
             away = opp_text.strip().lower().startswith("at ")
             home, visitor = (opp, team) if away else (team, opp)
-            m = re.match(r"\s*[WLT]\s+(\d+)\s*-\s*(\d+)", str(row[res_col]))
+            m = re.match(r"\s*[WLT]\s+(\d+)\s*-\s*(\d+)", result)
             if m:
                 us, them = int(m.group(1)), int(m.group(2))     # listed with this team's score first
                 hs, vs = (them, us) if away else (us, them)
             else:
                 hs = vs = ""                                     # not played yet (or not posted)
-            k = frozenset((home, visitor))
-            old = games.get(k)
-            if not marked and k in marked_pairs:
-                continue
-            if marked:
-                marked_pairs.add(k)
-            elif old is None:
-                print(f"    Counting {visitor} at {home} as a conference game (not marked * on {team}'s page)")
+            date = str(row[date_col]).strip()
+            book = marked if is_conf[_] else unmarked
+            slot = book.setdefault(frozenset((home, visitor)), {})
+            old = slot.get(date)
             if old is None or (old["hs"] == "" and hs != ""):
-                games[k] = {"date": str(row[date_col]).strip(), "home": home, "away": visitor, "hs": hs, "vs": vs}
+                slot[date] = {"date": date, "home": home, "away": visitor, "hs": hs, "vs": vs}
         time.sleep(1.5)   # be gentle with the website
+
+    def when(g):
+        return pd.to_datetime(g["date"], errors="coerce")
+
+    games = []
+    for pair in set(marked) | set(unmarked):
+        chosen = sorted(marked.get(pair, {}).values(), key=when)
+        # games between two conference teams that the site forgot to mark with * (only if that pair is
+        # short of its conference games, so conference-tournament games aren't counted)
+        for g in sorted(unmarked.get(pair, {}).values(), key=when):
+            if cfg.get("conference_games_only") or len(chosen) >= meetings:
+                break
+            if g["date"] not in {c["date"] for c in chosen}:
+                print(f"    Counting {g['away']} at {g['home']} ({g['date']}) as a conference game (not marked *)")
+                chosen.append(g)
+        played_ = [g for g in chosen if g["hs"] != ""]
+        unplayed = [g for g in chosen if g["hs"] == ""]
+        if cfg.get("conference_games_only"):
+            # teams make their own schedules: a past date with no result never happened (or was a
+            # multi-team event), so only future dates count as still to come
+            today = pd.Timestamp.today().normalize()
+            unplayed = [g for g in unplayed if not (when(g) < today)]
+            games += played_ + unplayed
+            continue
+        games += played_ + unplayed[:max(0, meetings - len(played_))]
 
     # scores typed in by hand (fixes.csv) fill in results the site hasn't posted
     fixes = os.path.join(cfg["folder"], "fixes.csv")
@@ -132,17 +167,19 @@ def scrape(key):
         with open(fixes, newline="") as f:
             for r in csv.DictReader(f):
                 h, a = r["home"].strip(), r["away"].strip()
-                g = games.get(frozenset((h, a)))
-                if g and g["hs"] == "" and str(r["home_goals"]).strip() != "":
-                    hg, ag = int(r["home_goals"]), int(r["away_goals"])
-                    g["hs"], g["vs"] = (hg, ag) if g["home"] == h else (ag, hg)
-                    print(f"  Used fixes.csv for {a} at {h}")
+                if str(r["home_goals"]).strip() == "":
+                    continue
+                for g in games:
+                    if g["home"] == h and g["away"] == a and g["hs"] == "":
+                        g["hs"], g["vs"] = int(r["home_goals"]), int(r["away_goals"])
+                        print(f"  Used fixes.csv for {a} at {h}")
+                        break
 
     # check against the official standings
     problems = []
     for name, rec in official.items():
         w = l = d = 0
-        for g in games.values():
+        for g in games:
             if g["hs"] == "" or name not in (g["home"], g["away"]):
                 continue
             us, them = (g["hs"], g["vs"]) if name == g["home"] else (g["vs"], g["hs"])
@@ -156,9 +193,9 @@ def scrape(key):
     with open(path, "w", newline="") as f:
         w_ = csv.writer(f)
         w_.writerow(["date", "home", "away", "home_goals", "away_goals"])
-        for g in sorted(games.values(), key=lambda g: (pd.to_datetime(g["date"], errors="coerce"), g["home"])):
+        for g in sorted(games, key=lambda g: (when(g), g["home"])):
             w_.writerow([g["date"], g["home"], g["away"], g["hs"], g["vs"]])
-    print(f"  {len(games)} conference {'games' if cfg['kind'] in ('soccer', 'football') else 'matches'} saved to {path}")
+    print(f"  {len(games)} conference {'games' if cfg['kind'] in ('soccer', 'football', 'basketball') else 'matches'} saved to {path}")
     if problems:
         print("  WARNING - some results aren't posted on the schedule pages yet:")
         for p in problems:

@@ -1,6 +1,6 @@
 """
-Builds the page for a sport decided by the regular-season title (football):
-who can win or share the championship, and who gets the automatic bid (AQ).
+Builds the page for a sport decided by the regular-season title (football, wrestling):
+who can win or share the championship, and (football) who gets the automatic bid (AQ).
 Called by make_page.py.
 """
 import csv
@@ -12,8 +12,12 @@ from collections import defaultdict, Counter
 from datetime import datetime
 from itertools import product, combinations
 
-import fb_tiebreaker as E
+import fb_tiebreaker
+import wr_tiebreaker
 from sports import SPORTS, LOGO_URL
+
+ENGINES = {"football": fb_tiebreaker, "wrestling": wr_tiebreaker}
+E = fb_tiebreaker
 
 esc = html.escape
 NUM = ["No", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten",
@@ -25,8 +29,10 @@ ORDER = ["outright", "aq", "aqdep", "share", "none"]
 LABEL = {"outright": "Outright champion + AQ", "aq": "Co-champion + AQ",
          "aqdep": "Co-champion; AQ on defensive yards/draw", "share": "Co-champion, no AQ",
          "none": "No title"}
-SHORT = {"outright": "Outright title + AQ", "aq": "Co-champion + AQ", "aqdep": "Co-champion, AQ undecided*",
-         "share": "Co-champion, no AQ", "none": "No title"}
+SHORT_AQ = {"outright": "Outright title + AQ", "aq": "Co-champion + AQ", "aqdep": "Co-champion, AQ undecided*",
+            "share": "Co-champion, no AQ", "none": "No title"}
+SHORT_NO_AQ = {"outright": "Outright title", "share": "Co-champion", "none": "No title"}
+SHORT = SHORT_AQ
 
 
 def word(n, cap=True):
@@ -40,6 +46,8 @@ def status(outcome, t):
         return "none"
     if len(champs) == 1:
         return "outright"
+    if aq is None:
+        return "share"
     if isinstance(aq, tuple):
         return "aqdep" if t in aq else "share"
     return "aq" if aq == t else "share"
@@ -47,7 +55,14 @@ def status(outcome, t):
 
 def build_title(key):
     from make_page import PAGE   # same page design as the other sports
+    global E, SHORT
     cfg = SPORTS[key]
+    E = ENGINES[cfg["kind"]]
+    SHORT = SHORT_AQ if E.HAS_AQ else SHORT_NO_AQ
+    if cfg["kind"] == "wrestling":
+        E.MIN_OPP = cfg.get("min_opponents", 7)
+        E.PREV_TOP = cfg.get("previous_top", [])
+    g1, gN = getattr(E, "GAME_WORD", ("game", "games"))
     folder = cfg["folder"]
     games_file = os.path.join(folder, "games.csv")
     played, remaining = E.load_games(games_file)
@@ -91,6 +106,8 @@ def build_title(key):
             for combo in variants:
                 sim = [(h, a, x, y) for (h, a), (x, y) in zip(remaining, combo)]
                 by_pattern[pattern].add(E.title(played + sim, teams))
+            if not E.SAMPLES:
+                pass
     known = bool(by_pattern)
 
     best = {t: min((ORDER.index(status(o, t)) for outs in by_pattern.values() for o in outs), default=4) for t in teams}
@@ -108,7 +125,7 @@ def build_title(key):
         return "".join(f"<span class='chip {kind}'>{esc(t)}{esc(note(t)) if note else ''}</span>" for t in ts)
 
     def clinch_note(t):
-        return " (outright title + AQ)" if worst[t] == 0 else " (at least a share)"
+        return (" (outright title + AQ)" if E.HAS_AQ else " (outright title)") if worst[t] == 0 else " (at least a share)"
 
     # ---------- the title race ----------
     def cell_outcome(outs):
@@ -117,6 +134,8 @@ def build_title(key):
         for champs, aq in sorted(outs, key=lambda o: (len(o[0]), o[0])):
             if len(champs) == 1:
                 parts.append(f"{champs[0]} (outright)")
+            elif aq is None:
+                parts.append(f"Co-champions: {', '.join(champs)}")
             else:
                 aqt = " or ".join(aq) + " on defensive yards/draw*" if isinstance(aq, tuple) else aq
                 parts.append(f"Co-champions: {', '.join(champs)} · AQ: {aqt}")
@@ -137,10 +156,15 @@ def build_title(key):
                     return S, seen
         return None, None
 
+    ineligible = []
+    if hasattr(E, "why_not"):
+        sched = played + [(h, a, 0, 0) for h, a in remaining]
+        ineligible = [(t, E.why_not(t, sched)) for t in teams if not E.eligible(t, sched)]
+
     sections = ""
     if not known:
         sections = (f"<div class='panel'><p class='lead'>Title scenarios appear once {MAX_LEFT} or fewer conference "
-                    f"games remain ({n} left now).</p></div>")
+                    f"{gN} remain ({n} left now).</p></div>")
     elif n == 0:
         sections = ""
     else:
@@ -151,7 +175,7 @@ def build_title(key):
         S, seen = deciding(lambda p: frozenset(by_pattern[p]), list(range(n)))
         if S is not None and len(S) <= 2 and S:
             dg = [remaining[i] for i in S]
-            sub = (f"{word(len(dg))} game{'s' if len(dg) > 1 else ''} decide{'s' if len(dg) == 1 else ''} it: "
+            sub = (f"{word(len(dg))} {gN if len(dg) > 1 else g1} decide{'s' if len(dg) == 1 else ''} it: "
                    + " and ".join(esc(game_name(g)) for g in dg) + ".")
             if len(dg) == 2:
                 head = f"<tr><th>{esc(dg[0][1])} at {esc(dg[0][0])}</th>" + "".join(
@@ -167,12 +191,11 @@ def build_title(key):
                                f"{esc(cell_outcome(seen[(r,)]))}</td></tr>" for r in E.RESULTS)
                 grid = f"<div class='tw'><table class='grid'><tr><th>Result</th><th class='r'>Title</th></tr>{body}</table></div>"
         else:
-            sub = ("Too many games affect the title race for one table, so here is what each team needs. "
-                   "Percentages show how often each thing happens across all the ways the other games can go, "
+            sub = (f"Too many {gN} affect the title race for one table, so here is what each team needs. "
+                   f"Percentages show how often each thing happens across all the ways the other {gN} can go, "
                    "counting each one equally.")
             grid = team_table(contenders, remaining, by_pattern, game_name, phrase, n)
-        star = ("<p class='small'>* Still tied after head-to-head and point differential against the tied teams, "
-                "so defensive yards (then a random draw) decide the AQ.</p>") if "*" in grid else ""
+        star = f"<p class='small'>{esc(E.STAR)}</p>" if E.STAR and "*" in grid else ""
         sections = f"""
 <h2>The title race</h2>
 <div class="panel">
@@ -181,39 +204,58 @@ def build_title(key):
   <p class="small"><b>{E.FINAL_LABEL}.</b> {recs}.</p>
   {grid}{star}
 </div>"""
-        if n > 0:
+        if n > 0 and E.SAMPLES:
             sections += (f"<p class='small' style='margin-top:12px'>Each scenario is checked with a sample of possible "
                          f"scores, so a rare point-differential tiebreak could still differ.</p>")
+
+    if n == 0 and known:
+        champs = sorted({c for outs in by_pattern.values() for o in outs for c in o[0]})
+        if champs:
+            who = (f"{champs[0]} is the outright regular-season champion." if len(champs) == 1 else
+                   f"{_names(champs)} are co-champions.")
+            sections = (f"<h2>Final</h2><div class='panel'><p class='lead'>The regular season is complete. {esc(who)}</p>"
+                        f"</div>") + sections
+    if ineligible:
+        sections += ("<h2>Title eligibility</h2><div class='panel'><p class='small'>These teams can't win the title "
+                     "because of their schedules:</p><ul class='why'>" +
+                     "".join(f"<li><b>{esc(t)}</b>: {esc(r)}</li>" for t, r in ineligible) + "</ul></div>")
 
     # ---------- intro ----------
     thru = ""
     if played_dates:
         last = max(played_dates)
-        thru = f"Standings through the games of {last.strftime('%A')}, {day(last, False)}, {last.year}. "
+        thru = f"Standings through the {gN} of {last.strftime('%A')}, {day(last, False)}, {last.year}. "
     rem_dates = sorted(d for d in dates.values() if d)
     if n == 0:
         rem = "The regular season is complete. "
     else:
         span = f", {day(rem_dates[0], False)}" + (f" to {day(rem_dates[-1], False)}" if rem_dates and rem_dates[-1] != rem_dates[0] else "") if rem_dates else ""
-        rem = f"{word(n)} conference game{'s' if n != 1 else ''} remain{'s' if n == 1 else ''}{span}. "
-    intro = (f"{thru}{rem}The team that finishes first is the CCIW champion and earns the conference's automatic "
-             f"bid (AQ) to the NCAA playoffs. Teams tied for first are co-champions, and the tiebreakers decide the AQ.")
+        rem = f"{word(n)} conference {g1 if n == 1 else gN} remain{'s' if n == 1 else ''}{span}. "
+    intro = f"{thru}{rem}{E.INTRO}"
 
     data = {"teams": teams, "played": played, "remaining": remaining, "q": 1}
+    if cfg["kind"] == "wrestling":
+        data |= {"min_opp": E.MIN_OPP, "prev_top": E.PREV_TOP}
     logo = f'<img class="logo" src="{esc(LOGO_URL)}" alt="CCIW logo">' if LOGO_URL else ""
     page = PAGE.format(
         title=esc(cfg["name"]) + " Title Race", logo=logo, sport=esc(cfg["name"]), intro=esc(intro),
         clinched=chips(clinched, "in", "No team has clinched a share yet.", clinch_note),
         alive=chips(alive, "alive", "The title is decided."),
         eliminated=chips(out_teams, "out", "No team is out of the title race yet."),
-        sections=sections, footer=esc(E.FOOTER), engine=E.JS, data=json.dumps(data), gword="game", gwords="games",
+        sections=sections, footer=esc(E.footer() if callable(getattr(E, "footer", None)) else E.FOOTER),
+        engine=E.JS, data=json.dumps(data), gword=g1, gwords=gN,
         c1="Clinched", c2="Still in the title race", c3="Out of the title race", heading="Title Race",
     )
     os.makedirs(folder, exist_ok=True)
     out = os.path.join(folder, "index.html")
     with open(out, "w") as f:
         f.write(page)
-    print(f"{cfg['name']}: {out} written ({n} games left)")
+    print(f"{cfg['name']}: {out} written ({n} {gN} left)")
+
+
+def _names(g):
+    g = list(g)
+    return ", ".join(g[:-1]) + (" and " if len(g) > 1 else "") + g[-1]
 
 
 def team_table(contenders, remaining, by_pattern, game_name, phrase, n):
@@ -294,6 +336,9 @@ def condition(ps, st, others, remaining, phrase):
     title_k = sum(1 for p in ps if "none" not in st[p])
     aq_k = sum(1 for p in ps if st[p] <= {"outright", "aq"})
     out_k = sum(1 for p in ps if st[p] == {"outright"})
+    if not E.HAS_AQ:
+        parts = [f"Title share {share(title_k)}"] + ([f"outright {share(out_k)}"] if out_k != title_k else [])
+        return " · ".join(parts)
     parts = [f"Title share {share(title_k)}", f"AQ {share(aq_k)}"]
     if out_k != aq_k:
         parts.append(f"outright {share(out_k)}")

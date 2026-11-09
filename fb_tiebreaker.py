@@ -19,6 +19,11 @@ from fractions import Fraction
 from cciw_tiebreaker import load_games, places
 
 KIND = "football"
+HAS_AQ = True
+INTRO = ("The team that finishes first is the CCIW champion and earns the conference's automatic bid (AQ) to the "
+         "NCAA playoffs. Teams tied for first are co-champions, and the tiebreakers decide the AQ.")
+STAR = ("* Still tied after head-to-head and point differential against the tied teams, so defensive yards "
+        "(then a random draw) decide the AQ.")
 GAME_WORD = ("game", "games")
 RESULTS = ["H", "A"]
 NOMINAL = {"H": (28, 21), "A": (21, 28)}
