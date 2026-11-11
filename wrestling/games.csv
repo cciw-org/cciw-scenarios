@@ -1,5 +1,6 @@
 date,home,away,home_goals,away_goals
 11/8/2026,Illinois Wesleyan,Millikin,8,41
+11/10/2026,North Central,Illinois Wesleyan,40,10
 11/12/2026,North Central,Carthage,,
 11/13/2026,Elmhurst,Wheaton,,
 11/15/2026,Concordia-Wisconsin,Carthage,,
@@ -14,8 +15,8 @@ date,home,away,home_goals,away_goals
 12/19/2026,Millikin,Wheaton,,
 1/2/2027,Augustana,Millikin,,
 1/7/2027,Carthage,Wheaton,,
-1/8/2027,Concordia-Wisconsin,Elmhurst,,
 1/8/2027,Concordia-Wisconsin,Wheaton,,
+1/8/2027,Concordia-Wisconsin,Elmhurst,,
 1/14/2027,Carthage,Aurora,,
 1/14/2027,Elmhurst,North Central,,
 1/14/2027,Illinois Wesleyan,Concordia-Wisconsin,,
